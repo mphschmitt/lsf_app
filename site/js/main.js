@@ -363,7 +363,10 @@ function ecranMot(id) {
     h("img", { src: r.vignette, alt: "", width: 64, height: 48, loading: "lazy" }),
     h("span", {}, h("strong", {}, r.auteur), h("br"), `${r.source} · ${r.licence}`))));
   function dessiner() {
-    zone.replaceChildren(lecteur(s, { index }));
+    zone.replaceChildren(lecteur(s, { index, onIndexChange: (nouvelIndex) => {
+      index = nouvelIndex;
+      items.forEach((li, i) => li.firstChild.classList.toggle("actif", i === index));
+    } }));
     items.forEach((li, i) => li.firstChild.classList.toggle("actif", i === index));
   }
   dessiner();

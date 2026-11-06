@@ -145,6 +145,25 @@ def main():
         cap("12-fiche-mot")
         if len(page.query_selector_all(".ressource")) < 2:
             erreurs.append("croissant devrait avoir au moins 2 ressources")
+        else:
+            premiere_video = page.get_attribute(".lecteur video", "src")
+            cadre = page.locator(".cadre-video").bounding_box()
+            x = cadre["x"] + cadre["width"] / 2
+            y = cadre["y"] + cadre["height"] / 2
+            page.mouse.move(x, y)
+            page.mouse.down()
+            page.mouse.move(x - 80, y, steps=5)
+            page.mouse.up()
+            page.wait_for_function("(src) => document.querySelector('.lecteur video').getAttribute('src') !== src", premiere_video)
+            if not page.query_selector("li:nth-child(2) .ressource.actif"):
+                erreurs.append("le balayage n'a pas synchronisé la ressource sélectionnée")
+            page.mouse.move(x, y)
+            page.mouse.down()
+            page.mouse.move(x + 80, y, steps=5)
+            page.mouse.up()
+            page.locator("li:nth-child(1) .ressource.actif").wait_for()
+            if page.get_attribute(".lecteur video", "src") != premiere_video:
+                erreurs.append("le balayage inverse n'a pas réaffiché la première vidéo")
 
         # Profil, crédits
         page.goto(base + "#/profil")
