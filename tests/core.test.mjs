@@ -2,9 +2,24 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { reviser, nouvelleCarte, Note, intervalle, retenue, estDue } from "../site/js/fsrs.js";
 import { construireSerie, construireLecon, distracteurs, estBonneSaisie, noteDuSens, normaliser, construireGrammaire } from "../site/js/exercises.js";
+import { ressourcesVideo } from "../site/js/player.js";
+import { retourPositif } from "../site/js/feedback.js";
 import fs from "node:fs";
 
 const JOUR = 86400000;
+
+test("Retours positifs : les effets peuvent être désactivés séparément", () => {
+  assert.doesNotThrow(() => retourPositif({ son: false, vibration: false }));
+});
+
+test("Ressources vidéo : les ressources locales passent avant les distantes hors ligne", () => {
+  const local = { video: "local.mp4" };
+  const distante = { video: "https://elix.example/video.mp4", distante: true };
+  const mot = { ressources: [distante, local], videosEnLigne: [] };
+  assert.deepEqual(ressourcesVideo(mot, true), [local, distante]);
+  assert.deepEqual(ressourcesVideo(mot, false), [distante, local]);
+  assert.deepEqual(ressourcesVideo({ ressources: [distante], videosEnLigne: [] }, true), [distante]);
+});
 
 test("FSRS : R(S, S) vaut 0,9 et l'intervalle vaut S", () => {
   assert.ok(Math.abs(retenue(10, 10) - 0.9) < 1e-9);

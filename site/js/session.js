@@ -3,6 +3,7 @@ import { h, icone, aller } from "./ui.js";
 import { rendreEtape } from "./exos.js";
 import { noteDuSens } from "./exercises.js";
 import { appliquerNotes, gagnerXp, marquerLecon, etat } from "./etat.js";
+import { retourPositif } from "./feedback.js";
 
 // options : { etapes, suivante?, duree?, lecon?, retour, titreFin, ctx, record? }
 export function session(racine, options) {
@@ -82,6 +83,13 @@ export function session(racine, options) {
   }
 
   function retour(r) {
+    if (r.ok) {
+      retourPositif({
+        son: etat.reglages.sonBonneReponse !== false,
+        vibration: etat.reglages.vibrationBonneReponse !== false,
+      });
+      corps.querySelectorAll(".bon").forEach((el) => el.classList.add("effet-reussite"));
+    }
     if (finChrono) { index++; setTimeout(afficher, r.ok ? 250 : 900); pied.className = "pied-session " + (r.ok ? "succes" : "echec"); return; }
     pied.className = "pied-session " + (r.ok ? "succes" : "echec");
     const suite = h("button", { type: "button", class: "btn principal", onclick: () => { index++; afficher(); } }, "Continuer");

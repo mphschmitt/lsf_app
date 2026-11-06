@@ -411,6 +411,9 @@ function ecranProfil() {
       } catch (err) { toast(err.message || "Fichier illisible"); }
     } });
   const dac = uniteDactylo();
+  const reglageEffet = (cle, libelle) => h("label", { class: "reglage-effet" },
+    h("input", { type: "checkbox", checked: reglage(cle, true), onchange: (e) => definir(cle, e.target.checked) }),
+    h("span", {}, libelle));
   app.replaceChildren(h("div", { class: "ecran" },
     h("header", { class: "entete-simple" }, h("h1", {}, "Profil")),
     h("main", { class: "contenu" },
@@ -423,6 +426,11 @@ function ecranProfil() {
         h("p", {}, reglage("dactylo") === "passer" ? "L'unité 1 est passée pour l'instant." : "L'unité 1 fait partie de ton parcours."),
         h("button", { type: "button", class: "btn secondaire", onclick: async () => { await definir("dactylo", reglage("dactylo") === "passer" ? "faire" : "passer"); ecranProfil(); } },
           reglage("dactylo") === "passer" ? "Remettre l'alphabet dans le parcours" : "Passer l'alphabet")) : null,
+      h("section", { class: "carte" }, h("h2", {}, "Retours de réussite"),
+        h("p", { class: "info" }, "Personnalise les effets à chaque bonne réponse."),
+        h("div", { class: "reglages-effets" },
+          reglageEffet("sonBonneReponse", "Jouer un son"),
+          reglageEffet("vibrationBonneReponse", "Faire vibrer l'appareil (si compatible)"))),
       h("section", { class: "carte" }, h("h2", {}, "Sauvegarde"),
         h("p", {}, "Ta progression est enregistrée uniquement sur cet appareil. Exporte-la pour la garder ou la transférer."),
         h("div", { class: "boutons" },

@@ -3,6 +3,7 @@
 Application gratuite, façon Duolingo, pour apprendre la langue des signes française (LSF). Elle s'installe sur iPhone, Android et ordinateur depuis le navigateur, sans App Store, et fonctionne hors ligne.
 
 L'app utilise des vidéos sous licence libre et peut aussi lire les vidéos de signe Elix directement depuis leurs serveurs, sans les télécharger ni les stocker dans le dépôt. Les liens sont recherchés pour tout le vocabulaire du dictionnaire ; seuls les résultats correspondant exactement au mot sont retenus, et un mot sans vidéo Elix disponible garde ses autres ressources.
+Hors connexion, le lecteur et les exercices privilégient les vidéos locales. Les vidéos Elix nécessitent Internet ; si l'une d'elles ne peut pas être chargée, l'app l'indique et propose une autre ressource locale quand elle existe.
 
 ## Ce qu'il y a dedans
 
@@ -11,7 +12,7 @@ L'app utilise des vidéos sous licence libre et peut aussi lire les vidéos de s
 - **Types de questions** : vidéo vers mot, mot vers vidéo, saisie, vrai ou faux, paires, signer devant la caméra en miroir (rien n'est enregistré), remettre une phrase en glose dans l'ordre, QCM de grammaire.
 - **Dactylologie** : unité 1 facultative (commencer, tester son niveau ou passer). Elle s'ouvre automatiquement quand le pipeline trouve un alphabet complet sous licence libre.
 - **Dictionnaire** : recherche, fiche de chaque mot avec toutes ses vidéos, leur auteur et leur licence.
-- **Profil** : statistiques, export et import de la progression, crédits.
+- **Profil** : statistiques, effets sonores et vibration réglables, export et import de la progression, crédits.
 
 La progression reste sur l'appareil (IndexedDB). Aucun compte, aucun serveur, aucune publicité.
 
