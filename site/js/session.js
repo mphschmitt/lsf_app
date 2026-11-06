@@ -119,16 +119,48 @@ export function session(racine, options) {
     let record = null;
     if (options.record) record = await options.record(bonnes);
     const taux = notees ? Math.round((bonnes / notees) * 100) : null;
-    corps.replaceChildren(h("div", { class: "etape fin" },
-      h("div", { class: "medaille" }, icone("check", 40, { epaisseur: 3 })),
-      h("h1", { class: "mot-titre" }, options.titreFin || "Session terminée"),
+    const unite = options.lecon ? etat.lecons[options.lecon]?.unite : null;
+    const leconsUnite = unite?.lecons || [];
+    const leconsTerminees = leconsUnite.filter((l) => etat.faites[l.id]).length;
+    const confettis = options.lecon ? h("div", { class: "confettis", "aria-hidden": "true" },
+      Array.from({ length: 28 }, (_, i) => h("i", { style: {
+        left: `${4 + (i * 37) % 93}%`,
+        animationDelay: `${(i % 7) * 90}ms`,
+        backgroundColor: ["var(--orange)", "var(--sarcelle)", "var(--vert)", "#6E56CF", "#E0A526"][i % 5],
+      } }))) : null;
+    const remplissage = unite && leconsUnite.length
+      ? h("div", { class: "progression-lecon", "aria-label": `Progression de l'unité ${unite.titre}` },
+        h("div", { class: "progression-lecon-texte" },
+          h("strong", {}, "Progression de l’unité"),
+          h("span", {}, `${leconsTerminees}/${leconsUnite.length}`)),
+        h("div", { class: "barre-lecon", role: "progressbar", "aria-valuemin": "0", "aria-valuemax": String(leconsUnite.length),
+          "aria-valuenow": String(leconsTerminees), "aria-label": `Progression de l'unité ${unite.titre}` },
+          h("div", { class: "barre-lecon-remplie", style: { width: "0%" } })),
+        h("p", { class: "info" }, unite.titre))
+      : null;
+    const finLecon = Boolean(options.lecon);
+    corps.replaceChildren(h("div", { class: "etape fin" + (finLecon ? " fin-lecon" : "") },
+      confettis,
+      h("div", { class: "medaille" + (finLecon ? " medaille-celebration" : "") }, icone("check", 40, { epaisseur: 3 })),
+      h("h1", { class: "mot-titre" }, finLecon
+        ? (etat.lecons[options.lecon]?.lecon.type === "revision" ? "Révision terminée !" : "Leçon terminée !")
+        : options.titreFin || "Session terminée"),
+      finLecon ? h("p", { class: "celebration-message" }, "Bravo, tu avances dans ton parcours !") : null,
+      remplissage,
       h("div", { class: "stats-fin" },
-        h("div", {}, h("strong", {}, `+${xp}`), h("span", {}, "XP")),
+        h("div", {}, h("strong", {}, `+${xp}`), h("span", {}, "XP gagnés")),
         taux !== null ? h("div", {}, h("strong", {}, `${taux} %`), h("span", {}, "de réussite")) : null,
         finChrono ? h("div", {}, h("strong", {}, String(bonnes)), h("span", {}, "bonnes réponses")) : null),
       record ? h("p", { class: "info" }, record) : null));
+    if (remplissage) {
+      const progression = corps.querySelector(".barre-lecon-remplie");
+      requestAnimationFrame(() => {
+        if (progression.isConnected) progression.style.width = `${(leconsTerminees / leconsUnite.length) * 100}%`;
+      });
+    }
     pied.className = "pied-session";
-    pied.replaceChildren(h("button", { type: "button", class: "btn principal", onclick: () => aller(options.retour || "/") }, "Continuer"));
+    pied.replaceChildren(h("button", { type: "button", class: "btn principal", onclick: () => aller(options.retour || "/") },
+      finLecon ? "Retour au parcours" : "Continuer"));
   }
 
   afficher();

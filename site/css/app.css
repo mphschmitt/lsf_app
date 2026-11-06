@@ -205,13 +205,35 @@ select.champ { font-size: 16px; }
 .verdict { display: flex; align-items: center; gap: 6px; font-family: var(--titre); font-weight: 800; font-size: 20px; }
 .effet-reussite { animation: eclat-reussite 440ms cubic-bezier(.2,.8,.2,1); }
 @keyframes eclat-reussite {
-  45% { transform: scale(1.055); box-shadow: 0 0 0 5px var(--vert-pale); }
+  35% { transform: scale(1.055); box-shadow: 0 0 0 5px var(--vert-pale), 0 0 22px rgba(30,138,90,.32); filter: brightness(1.06); }
+  70% { transform: scale(.99); }
 }
 .explication { font-size: 15px; }
 .retour .lien { color: inherit; }
 .echec .btn.principal { background: var(--rouge); }
 .succes .btn.principal { background: var(--vert); }
 .fin { align-items: center; text-align: center; padding-top: 40px; }
+.fin-lecon { position: relative; overflow: hidden; gap: 14px; padding: 48px 8px 24px; }
+.celebration-message { margin: -8px 0 0; color: var(--discret); font-size: 17px; }
+.confettis { position: absolute; z-index: 0; inset: 0 0 auto; height: 240px; overflow: hidden; pointer-events: none; }
+.fin-lecon > :not(.confettis) { position: relative; z-index: 1; }
+.confettis i { position: absolute; top: -12px; width: 9px; height: 13px; border-radius: 2px; opacity: 0; animation: confetti-tombe 1.65s ease-out both; }
+@keyframes confetti-tombe {
+  12% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(230px) rotate(620deg); }
+}
+.medaille-celebration { animation: medaille-pop 560ms cubic-bezier(.2,.8,.2,1) both; }
+@keyframes medaille-pop {
+  0% { opacity: 0; transform: scale(.55) rotate(-18deg); }
+  70% { transform: scale(1.12) rotate(4deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+.progression-lecon { width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 7px; text-align: left; }
+.progression-lecon-texte { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 14px; }
+.progression-lecon-texte span { color: var(--discret); font-weight: 700; }
+.barre-lecon { height: 12px; overflow: hidden; border-radius: 999px; background: var(--ligne); }
+.barre-lecon-remplie { height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--sarcelle), var(--vert)); transition: width 900ms cubic-bezier(.2,.8,.2,1); }
+.progression-lecon > .info { margin: 0; }
 .medaille { width: 88px; height: 88px; border-radius: 50%; background: var(--sarcelle); color: #fff; display: flex; align-items: center; justify-content: center; }
 .stats-fin { display: flex; gap: 24px; justify-content: center; }
 .stats-fin div { display: flex; flex-direction: column; }
