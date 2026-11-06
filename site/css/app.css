@@ -138,6 +138,7 @@ select.champ { font-size: 16px; }
 .controles { display: flex; gap: 8px; flex-wrap: wrap; }
 .navigation-videos { display: flex; flex: 1 1 100%; gap: 8px; }
 .navigation-videos .btn-mini { flex: 1; justify-content: center; }
+.indication-balaye { flex: 1 1 100%; text-align: center; }
 .btn-mini { min-height: 44px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--ligne-forte); background: var(--surface); font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
 .btn-mini.actif { border: 2px solid var(--sarcelle); background: var(--sarcelle-pale); color: var(--sarcelle-fonce); font-weight: 700; }
 .credit { margin: 0; font-size: 12px; color: var(--discret); }

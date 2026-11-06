@@ -36,17 +36,30 @@ export function lecteur(sens, { controles = true, credit = true, index = null, o
 
   if (res.length > 1) {
     let depart = null;
+    const balayer = (x, y) => {
+      if (!depart) return;
+      const dx = x - depart.x;
+      const dy = y - depart.y;
+      depart = null;
+      if (Math.abs(dx) >= 40 && Math.abs(dx) > Math.abs(dy) * 1.25) changer(dx < 0 ? 1 : -1);
+    };
+    cadre.addEventListener("touchstart", (e) => {
+      const t = e.changedTouches[0];
+      if (t) depart = { x: t.clientX, y: t.clientY };
+    }, { passive: true });
+    cadre.addEventListener("touchend", (e) => {
+      const t = e.changedTouches[0];
+      if (t) balayer(t.clientX, t.clientY);
+    }, { passive: true });
+    cadre.addEventListener("touchcancel", () => { depart = null; }, { passive: true });
     cadre.addEventListener("pointerdown", (e) => {
-      if (!e.isPrimary) return;
+      if (!e.isPrimary || e.pointerType === "touch") return;
       depart = { x: e.clientX, y: e.clientY, id: e.pointerId };
       cadre.setPointerCapture(e.pointerId);
     });
     cadre.addEventListener("pointerup", (e) => {
       if (!depart || depart.id !== e.pointerId) return;
-      const dx = e.clientX - depart.x;
-      const dy = e.clientY - depart.y;
-      depart = null;
-      if (Math.abs(dx) >= 40 && Math.abs(dx) > Math.abs(dy) * 1.25) changer(dx < 0 ? 1 : -1);
+      balayer(e.clientX, e.clientY);
     });
     cadre.addEventListener("pointercancel", () => { depart = null; });
   }
@@ -60,7 +73,8 @@ export function lecteur(sens, { controles = true, credit = true, index = null, o
     } }, "Ralenti 0,5×");
   const navigation = res.length > 1 ? h("div", { class: "navigation-videos", role: "group", "aria-label": "Parcourir les vidéos du mot" },
     h("button", { type: "button", class: "btn-mini", "aria-label": "Vidéo précédente", onclick: () => changer(-1) }, "Précédente"),
-    h("button", { type: "button", class: "btn-mini", "aria-label": "Vidéo suivante", onclick: () => changer(1) }, "Suivante")) : null;
+    h("button", { type: "button", class: "btn-mini", "aria-label": "Vidéo suivante", onclick: () => changer(1) }, "Suivante"),
+    h("span", { class: "info indication-balaye" }, "Fais glisser la vidéo pour changer")) : null;
   const barre = controles ? h("div", { class: "controles" },
     navigation,
     h("button", { type: "button", class: "btn-mini", onclick: () => { video.currentTime = 0; video.play().catch(() => {}); } },

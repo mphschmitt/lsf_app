@@ -164,6 +164,16 @@ def main():
             page.locator("li:nth-child(1) .ressource.actif").wait_for()
             if page.get_attribute(".lecteur video", "src") != premiere_video:
                 erreurs.append("le balayage inverse n'a pas réaffiché la première vidéo")
+            page.evaluate("""({x, y}) => {
+                const cible = document.querySelector(".cadre-video");
+                const debut = new Touch({identifier: 1, target: cible, clientX: x, clientY: y});
+                const fin = new Touch({identifier: 1, target: cible, clientX: x - 80, clientY: y});
+                cible.dispatchEvent(new TouchEvent("touchstart", {bubbles: true, changedTouches: [debut], touches: [debut]}));
+                cible.dispatchEvent(new TouchEvent("touchend", {bubbles: true, changedTouches: [fin], touches: []}));
+            }""", {"x": x, "y": y})
+            page.locator("li:nth-child(2) .ressource.actif").wait_for()
+            if page.get_attribute(".lecteur video", "src") == premiere_video:
+                erreurs.append("le balayage tactile n'a pas chargé l'autre vidéo")
 
         # Profil, crédits
         page.goto(base + "#/profil")
