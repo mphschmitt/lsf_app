@@ -139,6 +139,8 @@ select.champ { font-size: 16px; }
 .navigation-videos { display: flex; flex: 1 1 100%; gap: 8px; }
 .navigation-videos .btn-mini { flex: 1; justify-content: center; }
 .indication-balaye { flex: 1 1 100%; text-align: center; }
+.banniere-mise-a-jour { position: fixed; left: 12px; right: 12px; bottom: calc(76px + env(safe-area-inset-bottom)); z-index: 20; max-width: 536px; margin: 0 auto; padding: 10px 12px; border: 1px solid var(--ligne-forte); border-radius: 14px; background: var(--surface); box-shadow: 0 4px 16px rgba(20,33,61,.18); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.banniere-mise-a-jour .btn { min-height: 44px; padding: 0 12px; font-size: 14px; white-space: nowrap; }
 .btn-mini { min-height: 44px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--ligne-forte); background: var(--surface); font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
 .btn-mini.actif { border: 2px solid var(--sarcelle); background: var(--sarcelle-pale); color: var(--sarcelle-fonce); font-weight: 700; }
 .credit { margin: 0; font-size: 12px; color: var(--discret); }

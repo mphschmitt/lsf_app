@@ -34,6 +34,14 @@ function router() {
   aller("/");
 }
 
+function signalerMiseAJour() {
+  if (document.getElementById("banniere-mise-a-jour")) return;
+  document.body.append(h("div", { id: "banniere-mise-a-jour", class: "banniere-mise-a-jour",
+    role: "region", "aria-label": "Mise à jour disponible" },
+  h("span", {}, "Une nouvelle version est prête."),
+  h("button", { type: "button", class: "btn", onclick: () => location.reload() }, "Mettre à jour")));
+}
+
 // ---------------------------------------------------------------- Parcours
 function entete() {
   const xp = xpDuJour();
@@ -481,12 +489,7 @@ async function demarrer() {
   if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
     try {
       if (navigator.serviceWorker.controller) {
-        let rechargementEnCours = false;
-        navigator.serviceWorker.addEventListener("controllerchange", () => {
-          if (rechargementEnCours) return;
-          rechargementEnCours = true;
-          location.reload();
-        });
+        navigator.serviceWorker.addEventListener("controllerchange", signalerMiseAJour);
       }
       const registration = await navigator.serviceWorker.register("sw.js", { updateViaCache: "none" });
       const verifierMiseAJour = () => registration.update().catch((e) => {
