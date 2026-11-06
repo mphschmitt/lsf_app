@@ -411,6 +411,7 @@ function ecranProfil() {
       } catch (err) { toast(err.message || "Fichier illisible"); }
     } });
   const dac = uniteDactylo();
+  const vibrationsDisponibles = typeof navigator.vibrate === "function";
   const reglageEffet = (cle, libelle) => h("label", { class: "reglage-effet" },
     h("input", { type: "checkbox", checked: reglage(cle, true), onchange: (e) => definir(cle, e.target.checked) }),
     h("span", {}, libelle));
@@ -430,7 +431,9 @@ function ecranProfil() {
         h("p", { class: "info" }, "Personnalise les effets à chaque bonne réponse."),
         h("div", { class: "reglages-effets" },
           reglageEffet("sonBonneReponse", "Jouer un son"),
-          reglageEffet("vibrationBonneReponse", "Faire vibrer l'appareil (si compatible)"))),
+          vibrationsDisponibles
+            ? reglageEffet("vibrationBonneReponse", "Faire vibrer l'appareil")
+            : h("p", { class: "info" }, "Les vibrations ne sont pas prises en charge par ce navigateur. Sur iPhone, iOS ne permet pas à cette app web de déclencher une vibration."))),
       h("section", { class: "carte" }, h("h2", {}, "Sauvegarde"),
         h("p", {}, "Ta progression est enregistrée uniquement sur cet appareil. Exporte-la pour la garder ou la transférer."),
         h("div", { class: "boutons" },
