@@ -1,6 +1,6 @@
 // Contenu publié et progression de l'apprenant.
 import * as db from "./store.js";
-import { nouvelleCarte, reviser, estDue } from "./fsrs.js";
+import { nouvelleCarte, reviser, estDue, estExcluDesRevisions } from "./fsrs.js";
 
 export const OBJECTIF_XP = 30;
 
@@ -67,7 +67,9 @@ export function sensAppris() {
 }
 
 export function sensDus(maintenant = Date.now()) {
-  return Object.values(etat.cartes).filter((c) => etat.sens[c.id] && estDue(c, maintenant)).map((c) => c.id);
+  return Object.values(etat.cartes)
+    .filter((c) => etat.sens[c.id] && estDue(c, maintenant) && !estExcluDesRevisions(etat.sens[c.id]))
+    .map((c) => c.id);
 }
 
 export function sensRates() {
@@ -91,31 +93,31 @@ export async function marquerLecon(id, score) {
   await db.ecrire("lecons", f);
 }
 
-const jour = (d = new Date()) => {
+export const jourCourant = (d = new Date()) => {
   const z = (n) => String(n).padStart(2, "0");
   return `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())}`;
 };
 
 export function xpDuJour() {
   const j = reglage("jour");
-  return j && j.date === jour() ? j.xp : 0;
+  return j && j.date === jourCourant() ? j.xp : 0;
 }
 
 export function serie() {
   const s = reglage("serie", { jours: 0, dernier: null });
   if (!s.dernier) return 0;
-  const hier = jour(new Date(Date.now() - 86400000));
-  return s.dernier === jour() || s.dernier === hier ? s.jours : 0;
+  const hier = jourCourant(new Date(Date.now() - 86400000));
+  return s.dernier === jourCourant() || s.dernier === hier ? s.jours : 0;
 }
 
 export async function gagnerXp(n) {
   await definir("xp", reglage("xp", 0) + n);
-  const auj = jour();
+  const auj = jourCourant();
   const j = reglage("jour");
   await definir("jour", { date: auj, xp: (j && j.date === auj ? j.xp : 0) + n });
   const s = reglage("serie", { jours: 0, dernier: null });
   if (s.dernier !== auj) {
-    const hier = jour(new Date(Date.now() - 86400000));
+    const hier = jourCourant(new Date(Date.now() - 86400000));
     await definir("serie", { jours: s.dernier === hier ? s.jours + 1 : 1, dernier: auj });
   }
 }

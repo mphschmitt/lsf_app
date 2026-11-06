@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { reviser, nouvelleCarte, Note, intervalle, retenue, estDue } from "../site/js/fsrs.js";
+import { reviser, nouvelleCarte, Note, intervalle, retenue, estDue, estExcluDesRevisions, selectionnerRevisions } from "../site/js/fsrs.js";
 import { construireSerie, construireLecon, distracteurs, estBonneSaisie, noteDuSens, normaliser, construireGrammaire } from "../site/js/exercises.js";
 import { ressourcesVideo, ressourceVideoAttitree } from "../site/js/player.js";
 import { retourPositif } from "../site/js/feedback.js";
@@ -56,6 +56,34 @@ test("FSRS : un oubli fait revenir le signe vite et baisse la stabilité", () =>
   assert.ok(c.echeance - t <= 10 * 60000);
   assert.ok(estDue(c, t + 11 * 60000));
   assert.ok(c.difficulte >= 1 && c.difficulte <= 10);
+});
+
+test("Révisions du jour : prend les signes échus les plus anciens, exclut les signes proches et limite à cinq", () => {
+  const maintenant = Date.UTC(2026, 0, 10);
+  const sens = {
+    bonjour: { mot: "bonjour" },
+    bonsoir: { mot: "Bonsoir" },
+    merci: { mot: "merci" },
+    ancien: { mot: "ancien" },
+    recent: { mot: "récent" },
+    futur: { mot: "futur" },
+    un: { mot: "un" },
+    deux: { mot: "deux" },
+    trois: { mot: "trois" },
+    quatre: { mot: "quatre" },
+    cinq: { mot: "cinq" },
+    six: { mot: "six" },
+  };
+  const cartes = Object.keys(sens).map((id, i) => ({
+    id,
+    revisions: 1,
+    echeance: maintenant + (id === "futur" ? 1 : -i - 1) * 86400000,
+  }));
+  assert.deepEqual(selectionnerRevisions(cartes, sens, maintenant), ["six", "cinq", "quatre", "trois", "deux"]);
+  assert.deepEqual(selectionnerRevisions(cartes, sens, maintenant, 2), ["six", "cinq"]);
+  assert.ok(estExcluDesRevisions(sens.bonjour));
+  assert.ok(estExcluDesRevisions(sens.bonsoir));
+  assert.ok(estExcluDesRevisions(sens.merci));
 });
 
 const sens = Object.fromEntries(["a", "b", "c", "d", "e", "f"].map((id, i) => [id, { id, mot: ["bonjour", "merci", "lui, elle", "combien ?", "café", "au revoir"][i], alias: id === "c" ? ["elle"] : [] }]));

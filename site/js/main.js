@@ -1,9 +1,10 @@
 import { h, icone, aller, barreOnglets, lienExterne, toast, estIOS, estInstallee } from "./ui.js";
 import {
-  etat, charger, reglage, definir, leconDebloquee, leconCourante, sensAppris, sensDus, sensRates,
+  etat, charger, reglage, definir, jourCourant, leconDebloquee, leconCourante, sensAppris, sensDus, sensRates,
   xpDuJour, serie, OBJECTIF_XP, uniteDactylo, marquerLecon,
 } from "./etat.js";
 import { construireLecon, construireGrammaire, construireSerie, TYPES, melanger, normaliser } from "./exercises.js";
+import { estExcluDesRevisions, selectionnerRevisions } from "./fsrs.js";
 import { session } from "./session.js";
 import { lecteur, ressourcesVideo } from "./player.js";
 import * as db from "./store.js";
@@ -78,8 +79,40 @@ function ecranParcours() {
       h("a", { href: "#/credits" }, "En savoir plus")));
   }
   app.replaceChildren(h("div", { class: "ecran" }, entete(), h("main", { class: "contenu parcours" }, blocs), barreOnglets("parcours")));
+  proposerRevisionQuotidienne();
   const cible = document.querySelector(".noeud.courant");
   if (cible) cible.scrollIntoView({ block: "center" });
+}
+
+function proposerRevisionQuotidienne() {
+  const aujourdHui = jourCourant();
+  if (reglage("popupRevisionDate") === aujourdHui) return;
+  const ids = selectionnerRevisions(Object.values(etat.cartes), etat.sens, Date.now(), 5);
+  if (!ids.length) return;
+
+  const dialogue = h("dialog", { class: "revision-quotidienne", "aria-labelledby": "titre-revision-quotidienne",
+    oncancel: (e) => { e.preventDefault(); fermer(false); } },
+    h("div", { class: "revision-entete" }, icone("revoir", 30)),
+    h("h2", { id: "titre-revision-quotidienne" }, "Un petit moment pour réviser ?"),
+    h("p", {}, "L’algorithme a repéré quelques signes à revoir aujourd’hui :"),
+    h("ul", { class: "revision-mots" }, ids.map((id) => h("li", {}, etat.sens[id].mot))),
+    h("p", { class: "info" }, "Les signes très proches « bonjour », « bonsoir » et « merci » sont écartés de cette sélection."),
+    h("div", { class: "revision-actions" },
+      h("button", { type: "button", class: "btn principal", onclick: () => fermer(true) }, "Commencer la révision"),
+      h("button", { type: "button", class: "btn secondaire large", onclick: () => fermer(false) }, "Plus tard")));
+
+  async function fermer(commencer) {
+    try {
+      await definir("popupRevisionDate", aujourdHui);
+      dialogue.close();
+      if (commencer) aller("/session/revisionquotidienne");
+    } catch (err) {
+      toast(err.message || "Impossible d’enregistrer ce choix.");
+    }
+  }
+
+  app.append(dialogue);
+  dialogue.showModal();
 }
 
 function carteUnite(u, courante) {
@@ -294,6 +327,14 @@ function ecranSession(mode) {
     return session(app, { etapes: etapesEpeler(10), retour: "/entrainement", titreFin: "Session terminée", ctx: { lettres: dac.lettres } });
   }
   if (!appris.length) return aller("/entrainement");
+  if (mode === "revisionquotidienne") {
+    const ids = selectionnerRevisions(Object.values(etat.cartes), etat.sens, Date.now(), 5);
+    if (!ids.length) { toast("Aucun signe n’est à revoir pour le moment."); return aller("/"); }
+    const disponibles = appris.filter((id) => !estExcluDesRevisions(etat.sens[id]));
+    const types = disponibles.length >= 4 ? ["videoMot", "motVideo", "vraiFaux", "saisie"] : ["saisie"];
+    const etapes = construireSerie({ ids, proches: ids, reste: disponibles, types, nombre: ids.length * 2, sensParId });
+    return session(app, { etapes, retour: "/", titreFin: "Révision terminée" });
+  }
   if (mode === "revision") {
     const dus = sensDus();
     if (!dus.length) return aller("/entrainement");

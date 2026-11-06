@@ -11,6 +11,7 @@ const DECAY = -0.5;
 const FACTOR = 19 / 81; // R(S, S) = 0,9
 const JOUR = 86400000;
 const RETENTION = 0.9;
+const MOTS_NON_RECOMMANDES = new Set(["bonjour", "bonsoir", "merci"]);
 
 const borne = (x, min, max) => Math.min(max, Math.max(min, x));
 
@@ -84,4 +85,19 @@ export function reviser(carte, note, maintenant = Date.now()) {
 
 export function estDue(carte, maintenant = Date.now()) {
   return carte.revisions > 0 && carte.echeance <= maintenant;
+}
+
+export function estExcluDesRevisions(sens) {
+  return MOTS_NON_RECOMMANDES.has(sens.mot.toLocaleLowerCase("fr"));
+}
+
+export function selectionnerRevisions(cartes, sensParId, maintenant = Date.now(), limite = 5) {
+  return cartes
+    .filter((carte) => {
+      const sens = sensParId[carte.id];
+      return sens && estDue(carte, maintenant) && !estExcluDesRevisions(sens);
+    })
+    .sort((a, b) => a.echeance - b.echeance)
+    .slice(0, Math.max(0, limite))
+    .map((carte) => carte.id);
 }
