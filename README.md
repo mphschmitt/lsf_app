@@ -19,14 +19,16 @@ La progression reste sur l'appareil (IndexedDB). Aucun compte, aucun serveur, au
 
 Le fichier [`pipeline/couverture.md`](pipeline/couverture.md) détaille ce qui est publié. Au premier passage, avec le dépôt [parlr/lsf-data](https://github.com/parlr/lsf-data) seulement : 658 signes, 669 vidéos, 31 unités publiées sur les 60 du programme.
 
-Ne sont pas publiées, faute de vidéos libres : la dactylologie, les chiffres, l'hypothèse et les niveaux B1 et B2 (qui demandent des vidéos de discours). Le workflow « Mettre à jour le contenu » interroge aussi Wikimedia Commons et publiera les unités dès que les ressources existeront.
+Ne sont pas publiées, faute de vidéos libres : la dactylologie, les chiffres, l'hypothèse et les niveaux B1 et B2 (qui demandent des vidéos de discours). Le pipeline peut aussi interroger Wikimedia Commons lors de la génération du contenu avec l'option `--commons`.
 
 ## Mettre l'app en ligne (GitHub Pages)
 
-1. Crée un dépôt sur GitHub et pousse ce dossier sur la branche `main`.
-2. Dans le dépôt : **Settings › Pages › Source : GitHub Actions**.
-3. Le workflow « Publier sur GitHub Pages » se lance à chaque push. L'adresse de l'app s'affiche dans l'onglet **Actions**, sous la forme `https://<ton-compte>.github.io/<dépôt>/`.
-4. Optionnel : lance une fois **Actions › Mettre à jour le contenu** pour ajouter les vidéos libres de Wikimedia Commons. L'app est ensuite republiée automatiquement.
+1. Envoie ce dépôt sur GitHub (il est actuellement configuré pour `mphschmitt/lsf_app`, branche `master`).
+2. Dans le dépôt GitHub : **Settings › Pages › Build and deployment › Source : GitHub Actions**.
+3. Le workflow « Publier sur GitHub Pages » publie le dossier `site/` à chaque push sur `master`. Tu peux aussi le lancer manuellement depuis **Actions**.
+4. Une fois le premier déploiement terminé, l'adresse s'affiche dans **Settings › Pages** et dans le résumé du workflow, sous la forme `https://mphschmitt.github.io/lsf_app/`.
+
+Le site est statique : aucune étape de build ni dépendance supplémentaire n'est nécessaire.
 
 ## Installer l'app sur iPhone
 
