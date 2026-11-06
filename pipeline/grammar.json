@@ -1,0 +1,437 @@
+{
+  "_doc": "Fiches de grammaire, écrites par le projet (texte seulement, aucune vidéo). Les exemples sont en glose : les signes en majuscules, dans l'ordre LSF. Statut a_relire : contenu à valider par un enseignant de LSF sourd avant toute diffusion large.",
+  "statut": "a_relire",
+  "fiches": {
+    "visage": {
+      "titre": "Le visage fait partie du signe",
+      "points": [
+        "En LSF, l'expression du visage n'est pas décorative : elle porte du sens, comme l'intonation à l'oral.",
+        "Un même signe des mains peut changer de sens selon le visage qui l'accompagne : affirmation, question, doute.",
+        "Pour saluer, on regarde la personne et on accompagne le signe d'une expression accueillante."
+      ],
+      "exemples": [
+        {"glose": "BONJOUR", "fr": "Bonjour.", "note": "Regard vers la personne, visage ouvert."}
+      ],
+      "exercices": [
+        {"type": "qcm", "question": "En LSF, à quoi sert l'expression du visage ?", "options": ["Elle porte du sens, comme l'intonation", "Elle est facultative", "Elle ne sert qu'aux émotions", "Elle remplace les mains"], "reponse": 0, "explication": "Le visage est un élément grammatical de la LSF : il marque par exemple la question ou la négation."}
+      ]
+    },
+    "pronoms": {
+      "titre": "Les pronoms par pointage",
+      "points": [
+        "Pour dire « je », « tu » ou « il, elle », on pointe avec l'index : vers soi, vers la personne à qui l'on parle, ou vers la personne dont on parle.",
+        "Si la personne dont on parle n'est pas là, on lui attribue un endroit dans l'espace devant soi, puis on pointe cet endroit pour la désigner."
+      ],
+      "exemples": [
+        {"glose": "MOI SOURD", "fr": "Je suis sourd."},
+        {"glose": "TOI ENTENDANT ?", "fr": "Tu es entendant ?", "note": "Sourcils levés : question fermée."}
+      ],
+      "exercices": [
+        {"type": "ordre", "fr": "Je suis sourd.", "tokens": ["MOI", "SOURD"]},
+        {"type": "qcm", "question": "Comment désigne-t-on une personne absente dont on parle ?", "options": ["On lui donne un endroit dans l'espace, puis on pointe cet endroit", "On épelle toujours son prénom", "On ne peut pas en parler", "On pointe vers soi"], "reponse": 0, "explication": "L'espace devant le signeur sert à placer les personnes et les choses dont on parle."}
+      ]
+    },
+    "questions": {
+      "titre": "Poser une question",
+      "points": [
+        "Pour une question fermée, à laquelle on répond par oui ou non, on lève les sourcils.",
+        "Pour une question ouverte (qui, quoi, où, quand, comment, combien, pourquoi), on fronce les sourcils.",
+        "Le signe interrogatif se place souvent en fin de phrase."
+      ],
+      "exemples": [
+        {"glose": "TOI SOURD ?", "fr": "Tu es sourd ?", "note": "Sourcils levés."},
+        {"glose": "TOI PRÉNOM QUOI ?", "fr": "Comment tu t'appelles ?", "note": "Sourcils froncés."}
+      ],
+      "exercices": [
+        {"type": "qcm", "question": "« TOI SOURD ? » est une question fermée. Quel visage l'accompagne ?", "options": ["Sourcils levés", "Sourcils froncés", "Visage neutre", "Yeux fermés"], "reponse": 0, "explication": "On répond par oui ou non : sourcils levés."},
+        {"type": "qcm", "question": "« TOI PRÉNOM QUOI ? » : quel visage l'accompagne ?", "options": ["Sourcils froncés", "Sourcils levés", "Visage neutre", "Sourire"], "reponse": 0, "explication": "C'est une question ouverte : sourcils froncés."},
+        {"type": "ordre", "fr": "Comment tu t'appelles ?", "tokens": ["TOI", "PRÉNOM", "QUOI ?"]}
+      ]
+    },
+    "negation": {
+      "titre": "Dire non",
+      "points": [
+        "La négation se marque par un mouvement de la tête de gauche à droite, souvent avec un signe comme NON ou PAS.",
+        "Certains verbes ont leur propre forme négative : « je sais » et « je ne sais pas », « je veux » et « je ne veux pas », « je peux » et « je ne peux pas » sont des signes différents.",
+        "Ce module fait apprendre ces paires ensemble."
+      ],
+      "exemples": [
+        {"glose": "MOI SAVOIR-PAS", "fr": "Je ne sais pas.", "note": "Forme négative propre au verbe, avec la tête qui fait non."}
+      ],
+      "exercices": [
+        {"type": "qcm", "question": "Comment dit-on « je ne veux pas » ?", "options": ["Avec un signe propre, accompagné du mouvement de tête", "En ajoutant toujours NON après VOULOIR", "Uniquement avec la tête", "On ne peut pas le dire"], "reponse": 0, "explication": "Quelques verbes courants ont une forme négative à part entière."}
+      ]
+    },
+    "possession": {
+      "titre": "Mon, ton, son",
+      "points": [
+        "Les possessifs se font avec la main plate, paume tournée vers le possesseur : vers soi pour « mon », vers l'autre pour « ton », vers l'endroit de la personne pour « son ».",
+        "Le signe AVOIR permet de dire « j'ai un frère », et sa forme négative « je n'ai pas »."
+      ],
+      "exemples": [
+        {"glose": "MON FRÈRE", "fr": "Mon frère."},
+        {"glose": "MOI FRÈRE AVOIR", "fr": "J'ai un frère."}
+      ],
+      "exercices": [
+        {"type": "qcm", "question": "Pour signer « ton », vers où la paume s'oriente-t-elle ?", "options": ["Vers la personne à qui l'on parle", "Vers soi", "Vers le haut", "Vers le sol"], "reponse": 0, "explication": "Le possessif s'oriente vers le possesseur."}
+      ]
+    },
+    "adjectif": {
+      "titre": "L'adjectif après le nom",
+      "points": [
+        "En général, on signe d'abord l'objet, puis sa qualité : « voiture rouge » se signe VOITURE ROUGE.",
+        "Le visage et l'amplitude du mouvement peuvent renforcer une qualité : très rouge, un peu rouge."
+      ],
+      "exemples": [
+        {"glose": "VOITURE ROUGE", "fr": "Une voiture rouge."}
+      ],
+      "exercices": [
+        {"type": "ordre", "fr": "Une voiture rouge.", "tokens": ["VOITURE", "ROUGE"]}
+      ]
+    },
+    "ligne_temps": {
+      "titre": "La ligne du temps",
+      "points": [
+        "Le temps se situe le long d'une ligne qui passe par le corps : le passé derrière, le présent au niveau du corps, le futur devant.",
+        "HIER part vers l'arrière, DEMAIN vers l'avant.",
+        "La LSF ne conjugue pas les verbes : c'est le repère de temps qui situe l'action."
+      ],
+      "exemples": [
+        {"glose": "DEMAIN MOI CINÉMA", "fr": "Demain, je vais au cinéma."}
+      ],
+      "exercices": [
+        {"type": "qcm", "question": "Où se situe le futur sur la ligne du temps ?", "options": ["Devant le corps", "Derrière le corps", "Au-dessus de la tête", "À gauche"], "reponse": 0, "explication": "Le futur est devant, le passé derrière."},
+        {"type": "qcm", "question": "Comment indique-t-on qu'une action est passée ?", "options": ["Avec un repère de temps (HIER, AVANT…)", "En conjuguant le verbe", "En signant plus lentement", "On ne peut pas"], "reponse": 0, "explication": "Le verbe ne change pas : le repère de temps situe l'action."}
+      ]
+    },
+    "temps_en_tete": {
+      "titre": "Le repère de temps en premier",
+      "points": [
+        "On pose d'abord le cadre de la phrase : quand, puis souvent où.",
+        "Le repère de temps (MATIN, SOIR, DEMAIN…) se place donc en début de phrase."
+      ],
+      "exemples": [
+        {"glose": "SOIR MOI RESTAURANT", "fr": "Ce soir, je vais au restaurant."}
+      ],
+      "exercices": [
+        {"type": "ordre", "fr": "Ce soir, je vais au restaurant.", "tokens": ["SOIR", "MOI", "RESTAURANT"]},
+        {"type": "ordre", "fr": "Demain matin, je travaille.", "tokens": ["DEMAIN", "MATIN", "MOI", "TRAVAILLER"]}
+      ]
+    },
+    "pronoms_pluriel": {
+      "titre": "Nous, vous, eux",
+      "points": [
+        "Les pronoms pluriels balaient l'espace : un mouvement qui englobe les personnes concernées.",
+        "NOUS inclut le signeur, VOUS balaie les personnes en face, EUX balaie un endroit à côté."
+      ],
+      "exemples": [
+        {"glose": "NOUS ENSEMBLE", "fr": "Nous sommes ensemble."}
+      ],
+      "exercices": [
+        {"type": "qcm", "question": "Qu'est-ce qui distingue « vous » de « toi » ?", "options": ["Un mouvement qui balaie plusieurs personnes", "Une autre configuration de main sans mouvement", "Le visage seulement", "Rien"], "reponse": 0, "explication": "Le pluriel des pronoms se marque par un balayage de l'espace."}
+      ]
+    },
+    "ordre": {
+      "titre": "L'ordre des signes",
+      "points": [
+        "Une phrase simple suit souvent cet ordre : le temps, le lieu, la personne, puis l'action.",
+        "On pose le décor avant de raconter ce qui s'y passe."
+      ],
+      "exemples": [
+        {"glose": "MIDI MOI PAIN MANGER", "fr": "À midi, je mange du pain."}
+      ],
+      "exercices": [
+        {"type": "ordre", "fr": "À midi, je mange du pain.", "tokens": ["MIDI", "MOI", "PAIN", "MANGER"]},
+        {"type": "ordre", "fr": "Ce matin, j'ai bu un café.", "tokens": ["MATIN", "MOI", "CAFÉ", "BOIRE"]}
+      ]
+    },
+    "pluriel": {
+      "titre": "Le pluriel",
+      "points": [
+        "Le pluriel ne s'ajoute pas comme un « s » : on répète le signe à plusieurs endroits, ou on ajoute un signe de quantité.",
+        "BEAUCOUP, PLUSIEURS, NOMBREUX ou TOUT précisent la quantité."
+      ],
+      "exemples": [
+        {"glose": "RESTAURANT BEAUCOUP", "fr": "Il y a beaucoup de restaurants."}
+      ],
+      "exercices": [
+        {"type": "qcm", "question": "Comment marque-t-on souvent le pluriel ?", "options": ["En répétant le signe ou en ajoutant un signe de quantité", "En ajoutant un signe « S »", "En signant plus vite", "On ne le marque jamais"], "reponse": 0, "explication": "Répétition et quantifieurs sont les deux procédés courants."}
+      ]
+    },
+    "prepositions": {
+      "titre": "Sur, sous, dans, à côté",
+      "points": [
+        "Pour situer un objet, on signe d'abord le repère fixe (la table), puis l'objet que l'on place par rapport à lui (le livre).",
+        "La position des mains l'une par rapport à l'autre montre directement la relation : dessus, dessous, dedans, à côté."
+      ],
+      "exemples": [
+        {"glose": "TABLE LIVRE (posé dessus)", "fr": "Le livre est sur la table."}
+      ],
+      "exercices": [
+        {"type": "ordre", "fr": "Le livre est sur la table.", "tokens": ["TABLE", "LIVRE"]},
+        {"type": "qcm", "question": "Pour « le livre est sur la table », que signe-t-on en premier ?", "options": ["La table, le repère fixe", "Le livre", "Le signe SUR", "Peu importe"], "reponse": 0, "explication": "Le repère vient d'abord, l'objet placé ensuite."}
+      ]
+    },
+    "localisation": {
+      "titre": "Situer un lieu",
+      "points": [
+        "On place les lieux dans l'espace devant soi, puis on les désigne en pointant.",
+        "DEVANT et DERRIÈRE se signent par rapport au repère choisi."
+      ],
+      "exemples": [
+        {"glose": "GARE (placée) BANQUE DEVANT", "fr": "La banque est devant la gare."}
+      ],
+      "exercices": [
+        {"type": "ordre", "fr": "La banque est devant la gare.", "tokens": ["GARE", "BANQUE", "DEVANT"]}
+      ]
+    },
+    "intensite": {
+      "titre": "Plus ou moins fort",
+      "points": [
+        "L'intensité se montre par le visage et par le mouvement : un mouvement plus ample ou plus tendu renforce le sens.",
+        "Ainsi, TRISTE peut devenir « un peu triste » ou « très triste » sans ajouter de mot."
+      ],
+      "exemples": [
+        {"glose": "MOI FATIGUÉ", "fr": "Je suis très fatigué.", "note": "Visage marqué, mouvement appuyé."}
+      ],
+      "exercices": [
+        {"type": "qcm", "question": "Comment dire « très content » ?", "options": ["Avec un visage et un mouvement plus marqués", "En ajoutant toujours un signe TRÈS", "En signant deux fois plus lentement", "On ne peut pas"], "reponse": 0, "explication": "L'intensité est portée par le visage et le mouvement."}
+      ]
+    },
+    "classificateurs_vehicules": {
+      "titre": "Les classificateurs de véhicules",
+      "points": [
+        "Après avoir signé VOITURE, on peut représenter la voiture avec une forme de main qui la remplace.",
+        "Cette main se déplace pour montrer le trajet : elle tourne, monte, s'arrête."
+      ],
+      "exemples": [
+        {"glose": "VOITURE (main-voiture qui tourne à droite)", "fr": "La voiture tourne à droite."}
+      ],
+      "exercices": [
+        {"type": "qcm", "question": "À quoi sert un classificateur de véhicule ?", "options": ["À représenter le véhicule et montrer son déplacement", "À épeler la marque", "À dire le prix", "À rien"], "reponse": 0, "explication": "La main-véhicule montre le trajet dans l'espace."}
+      ]
+    },
+    "directionnels": {
+      "titre": "Les verbes directionnels",
+      "points": [
+        "Certains verbes se déplacent de celui qui fait l'action vers celui qui la reçoit.",
+        "DONNER de moi vers toi veut dire « je te donne » ; de toi vers moi, « tu me donnes ». Le sens du mouvement remplace les pronoms."
+      ],
+      "exemples": [
+        {"glose": "MOI-DONNER-TOI", "fr": "Je te donne."},
+        {"glose": "TOI-DONNER-MOI", "fr": "Tu me donnes."}
+      ],
+      "exercices": [
+        {"type": "qcm", "question": "DONNER va de la personne en face vers le signeur. Que veut dire la phrase ?", "options": ["Tu me donnes", "Je te donne", "Il donne", "Nous donnons"], "reponse": 0, "explication": "Le mouvement va du donneur vers celui qui reçoit."}
+      ]
+    },
+    "forme_taille": {
+      "titre": "Décrire la forme et la taille",
+      "points": [
+        "Les mains dessinent ou montrent la forme et la taille des choses : un col, des rayures, un objet rond ou plat.",
+        "On nomme d'abord l'objet, puis on le décrit avec ces formes."
+      ],
+      "exemples": [
+        {"glose": "CHEMISE (rayures dessinées)", "fr": "Une chemise à rayures."}
+      ],
+      "exercices": [
+        {"type": "ordre", "fr": "Une chemise à rayures.", "tokens": ["CHEMISE", "RAYURES"]}
+      ]
+    },
+    "comparatif": {
+      "titre": "Comparer",
+      "points": [
+        "Pour comparer deux choses, on les place de part et d'autre dans l'espace, puis on indique laquelle l'emporte.",
+        "PRÉFÉRER permet de dire ce que l'on aime le plus."
+      ],
+      "exemples": [
+        {"glose": "TENNIS (à gauche) FOOT (à droite) MOI PRÉFÉRER (vers la droite)", "fr": "Je préfère le foot au tennis."}
+      ],
+      "exercices": [
+        {"type": "qcm", "question": "Comment organise-t-on une comparaison ?", "options": ["On place les deux éléments de part et d'autre, puis on choisit", "On signe les deux en même temps", "On épelle le mot « plus »", "On ne compare pas en LSF"], "reponse": 0, "explication": "L'espace sert à opposer les deux éléments."}
+      ]
+    },
+    "topicalisation": {
+      "titre": "Le thème en premier",
+      "points": [
+        "On annonce souvent d'abord ce dont on parle (le thème), avec les sourcils légèrement levés, puis on dit ce qu'on en dit.",
+        "« Mon travail, je l'aime » plutôt que « J'aime mon travail »."
+      ],
+      "exemples": [
+        {"glose": "TRAVAIL MOI J'AIME", "fr": "Mon travail, je l'aime."}
+      ],
+      "exercices": [
+        {"type": "ordre", "fr": "Mon travail, je l'aime.", "tokens": ["TRAVAIL", "MOI", "J'AIME"]}
+      ]
+    },
+    "frequence": {
+      "titre": "Souvent, toujours, jamais",
+      "points": [
+        "Les signes de fréquence se placent en général après l'action ou en fin de phrase.",
+        "La répétition du mouvement d'un verbe peut aussi indiquer qu'une action revient régulièrement."
+      ],
+      "exemples": [
+        {"glose": "MOI PISCINE SOUVENT", "fr": "Je vais souvent à la piscine."}
+      ],
+      "exercices": [
+        {"type": "ordre", "fr": "Je vais souvent à la piscine.", "tokens": ["MOI", "PISCINE", "SOUVENT"]}
+      ]
+    },
+    "superlatif": {
+      "titre": "Le plus, le moins",
+      "points": [
+        "Pour le superlatif, on compare un élément à tous les autres et on l'isole, avec un visage marqué.",
+        "COMBIEN ? permet de demander un prix."
+      ],
+      "exemples": [
+        {"glose": "PANTALON COMBIEN ?", "fr": "Combien coûte le pantalon ?", "note": "Sourcils froncés."}
+      ],
+      "exercices": [
+        {"type": "ordre", "fr": "Combien coûte le pantalon ?", "tokens": ["PANTALON", "COMBIEN ?"]}
+      ]
+    },
+    "aspect": {
+      "titre": "Une action qui dure",
+      "points": [
+        "Le mouvement d'un signe peut être allongé ou répété pour montrer qu'une action dure ou se répète : il pleut longtemps, il neige sans arrêt.",
+        "C'est ce qu'on appelle l'aspect."
+      ],
+      "exemples": [
+        {"glose": "PLEUVOIR (mouvement prolongé)", "fr": "Il pleut sans arrêt."}
+      ],
+      "exercices": [
+        {"type": "qcm", "question": "Comment montrer qu'il pleut longtemps ?", "options": ["En prolongeant ou en répétant le mouvement", "En conjuguant au passé", "En ajoutant un signe à la fin, obligatoirement", "On ne peut pas"], "reponse": 0, "explication": "La modulation du mouvement marque la durée."}
+      ]
+    },
+    "corps": {
+      "titre": "Situer sur le corps",
+      "points": [
+        "Pour dire où l'on a mal, on signe MAL à l'endroit concerné ou on le pointe.",
+        "Le corps sert directement de repère."
+      ],
+      "exemples": [
+        {"glose": "MOI MAL (au ventre)", "fr": "J'ai mal au ventre."}
+      ],
+      "exercices": [
+        {"type": "qcm", "question": "Comment dire où l'on a mal ?", "options": ["En signant ou en pointant à l'endroit du corps", "En épelant le mot", "En signant plus vite", "Ce n'est pas possible"], "reponse": 0, "explication": "Le corps est utilisé comme repère."}
+      ]
+    },
+    "accompli": {
+      "titre": "C'est fini, pas encore",
+      "points": [
+        "Pour dire qu'une action est accomplie, on peut ajouter FINI après le verbe.",
+        "Le repère de temps (HIER, AVANT) situe aussi l'action dans le passé."
+      ],
+      "exemples": [
+        {"glose": "MOI MANGER FINI", "fr": "J'ai fini de manger."}
+      ],
+      "exercices": [
+        {"type": "ordre", "fr": "J'ai fini de manger.", "tokens": ["MOI", "MANGER", "FINI"]}
+      ]
+    },
+    "modalites": {
+      "titre": "Vouloir, pouvoir, devoir",
+      "points": [
+        "Les signes de modalité (VOULOIR, POUVOIR, DEVOIR) expriment l'envie, la possibilité ou l'obligation.",
+        "VOULOIR et POUVOIR ont leurs formes négatives propres, vues dans l'unité « Oui et non »."
+      ],
+      "exemples": [
+        {"glose": "DEMAIN MOI PARTIR DEVOIR", "fr": "Demain, je dois partir."}
+      ],
+      "exercices": [
+        {"type": "ordre", "fr": "Demain, je dois partir.", "tokens": ["DEMAIN", "MOI", "PARTIR", "DEVOIR"]}
+      ]
+    },
+    "liens": {
+      "titre": "Donner son avis",
+      "points": [
+        "Pour donner son avis, on commence souvent par MOI CROIRE ou on pose le sujet en premier.",
+        "Pour dire « parce que », on peut poser la question POURQUOI ? puis y répondre soi-même."
+      ],
+      "exemples": [
+        {"glose": "MOI CONTENT. POURQUOI ? VACANCES", "fr": "Je suis content parce que c'est les vacances."}
+      ],
+      "exercices": [
+        {"type": "qcm", "question": "Une façon courante d'exprimer « parce que » :", "options": ["Poser POURQUOI ? puis répondre soi-même", "Épeler P-A-R-C-E", "Signer plus vite", "On ne l'exprime pas"], "reponse": 0, "explication": "La question rhétorique est un procédé courant."}
+      ]
+    },
+    "prise_de_role": {
+      "titre": "Prendre le rôle",
+      "points": [
+        "Pour décrire un animal ou une personne, le signeur peut prendre son rôle : son visage et son corps deviennent ceux du personnage.",
+        "On nomme d'abord l'animal, puis on montre comment il bouge ou se comporte."
+      ],
+      "exemples": [
+        {"glose": "CHAT (prise de rôle : le chat se lèche la patte)", "fr": "Le chat se lèche la patte."}
+      ],
+      "exercices": [
+        {"type": "qcm", "question": "Que fait-on dans une prise de rôle ?", "options": ["On incarne le personnage avec son visage et son corps", "On épelle son nom", "On le dessine dans l'air", "On le pointe seulement"], "reponse": 0, "explication": "Le signeur devient le personnage le temps de la description."}
+      ]
+    },
+    "consignes": {
+      "titre": "Donner une consigne",
+      "points": [
+        "Une consigne s'adresse directement à la personne : regard vers elle, visage ferme.",
+        "ATTENTION ou SILENCE suffisent souvent, accompagnés du visage."
+      ],
+      "exemples": [
+        {"glose": "TOI S'ASSEOIR", "fr": "Assieds-toi."}
+      ],
+      "exercices": [
+        {"type": "qcm", "question": "Qu'est-ce qui donne la valeur d'ordre à un signe ?", "options": ["Le regard vers la personne et le visage", "Un signe ORDRE ajouté", "La vitesse seule", "Rien"], "reponse": 0, "explication": "Le visage et le regard portent l'injonction."}
+      ]
+    },
+    "enchainer": {
+      "titre": "Enchaîner les actions",
+      "points": [
+        "Dans un récit, on raconte les actions dans l'ordre où elles se sont produites.",
+        "On réutilise les endroits de l'espace déjà attribués aux personnages."
+      ],
+      "exemples": [
+        {"glose": "HIER MOI MARCHER GLISSER TOMBER", "fr": "Hier, en marchant, j'ai glissé et je suis tombé."}
+      ],
+      "exercices": [
+        {"type": "ordre", "fr": "Hier, en marchant, j'ai glissé et je suis tombé.", "tokens": ["HIER", "MOI", "MARCHER", "GLISSER", "TOMBER"]}
+      ]
+    },
+    "decrire_pointer": {
+      "titre": "Décrire puis pointer",
+      "points": [
+        "Pour parler de « la femme qui habite à côté », on décrit d'abord la personne, on la place dans l'espace, puis on la pointe pour en parler.",
+        "Ce procédé joue le rôle de « qui » en français."
+      ],
+      "exemples": [
+        {"glose": "FEMME VOISIN (placée) ELLE SOURD", "fr": "La voisine est sourde."}
+      ],
+      "exercices": [
+        {"type": "ordre", "fr": "La voisine est sourde.", "tokens": ["FEMME", "VOISIN", "ELLE", "SOURD"]}
+      ]
+    },
+    "hypothese": {
+      "titre": "Si…",
+      "points": [
+        "La condition se signe en premier, avec les sourcils levés, puis vient la conséquence."
+      ],
+      "exemples": [
+        {"glose": "DEMAIN PLEUVOIR, MOI RESTER", "fr": "S'il pleut demain, je reste.", "note": "Sourcils levés sur la condition."}
+      ],
+      "exercices": [
+        {"type": "ordre", "fr": "S'il pleut demain, je reste.", "tokens": ["DEMAIN", "PLEUVOIR", "MOI", "RESTER"]}
+      ]
+    },
+    "nom_signe": {
+      "titre": "Le nom-signe",
+      "points": [
+        "Dans la communauté sourde, chacun reçoit un nom-signe, souvent lié à un trait physique ou à un caractère. Il est donné par des personnes sourdes.",
+        "Avant d'en avoir un, on épelle son prénom en dactylologie.",
+        "La LSF est reconnue comme une langue à part entière en France par la loi du 11 février 2005."
+      ],
+      "exemples": [
+        {"glose": "MOI PRÉNOM (épelé)", "fr": "Je m'appelle… (prénom épelé)."}
+      ],
+      "exercices": [
+        {"type": "qcm", "question": "Qui donne un nom-signe ?", "options": ["Des personnes sourdes", "On le choisit soi-même", "L'administration", "Un logiciel"], "reponse": 0, "explication": "Le nom-signe est donné par la communauté sourde."}
+      ]
+    }
+  }
+}

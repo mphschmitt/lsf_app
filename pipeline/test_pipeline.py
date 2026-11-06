@@ -1,0 +1,48 @@
+import os
+import sys
+import unittest
+
+sys.path.insert(0, os.path.dirname(__file__))
+from build import cle, normaliser, decouper_lecons  # noqa: E402
+from sources import lemme_depuis_titre, licence_commons  # noqa: E402
+
+
+class TestNormalisation(unittest.TestCase):
+    def test_cle(self):
+        self.assertEqual(cle("Combien ?"), "combien")
+        self.assertEqual(cle("Café"), "cafe")
+        self.assertEqual(cle("  au   revoir "), "au revoir")
+
+    def test_normaliser(self):
+        n = normaliser("lui, elle")
+        self.assertEqual(n["cle"], "lui")
+        self.assertEqual(n["alias"], ["elle"])
+        n = normaliser("chocolatine (pain au chocolat)")
+        self.assertEqual((n["affichage"], n["glose"]), ("chocolatine", "pain au chocolat"))
+        self.assertEqual(normaliser("beacoup")["cle"], "beaucoup")
+        self.assertIsNone(normaliser("oumanie (?)"))
+        self.assertEqual(normaliser("fille (la)")["cle"], "la fille")
+
+    def test_decoupage(self):
+        lecons = decouper_lecons(2, [str(i) for i in range(13)], True)
+        types = [l["type"] for l in lecons]
+        self.assertEqual(types, ["vocabulaire", "grammaire", "vocabulaire", "revision"])
+        self.assertEqual(sum(len(l["sens"]) for l in lecons if l["type"] == "vocabulaire"), 13)
+
+
+class TestCommons(unittest.TestCase):
+    def test_titres(self):
+        self.assertEqual(lemme_depuis_titre("File:LL-Q33302 (fsl)-Exemple-bonjour.webm"), ("bonjour", "", 1))
+        self.assertEqual(lemme_depuis_titre("File:Chapeau_Nm_2_1_1_-_Elix.ogv"), ("Chapeau", "n.m.", 2))
+        self.assertIsNone(lemme_depuis_titre("File:Une vidéo quelconque.webm"))
+
+    def test_licences(self):
+        ok = {"LicenseShortName": {"value": "CC BY-SA 4.0"}, "LicenseUrl": {"value": "https://creativecommons.org/licenses/by-sa/4.0"}}
+        self.assertEqual(licence_commons(ok)[0], "CC BY-SA 4.0")
+        self.assertEqual(licence_commons({"LicenseShortName": {"value": "CC0"}})[0], "CC0")
+        self.assertIsNone(licence_commons({"LicenseShortName": {"value": "CC BY-NC 4.0"}}))
+        self.assertIsNone(licence_commons({}))
+
+
+if __name__ == "__main__":
+    unittest.main()
