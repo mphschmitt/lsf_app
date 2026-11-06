@@ -5,7 +5,7 @@ import {
 } from "./etat.js";
 import { construireLecon, construireGrammaire, construireSerie, TYPES, melanger, normaliser } from "./exercises.js";
 import { session } from "./session.js";
-import { lecteur } from "./player.js";
+import { lecteur, ressourcesVideo } from "./player.js";
 import * as db from "./store.js";
 
 const app = document.getElementById("app");
@@ -120,6 +120,7 @@ function ecranUnite(num) {
   const u = etat.unites.find((x) => String(x.num) === num);
   if (!u) return aller("/");
   const signes = (u.sens || []).map((id) => etat.sens[id]);
+  const videosElix = signes.some((s) => (s.videosEnLigne || []).length);
   app.replaceChildren(h("div", { class: "ecran" },
     h("header", { class: "entete-simple" }, h("a", { href: "#/", class: "btn-icone", "aria-label": "Retour" }, icone("retour")),
       h("div", {}, h("h1", {}, u.titre), h("p", { class: "sous" }, `Unité ${u.num}`))),
@@ -130,7 +131,8 @@ function ecranUnite(num) {
         h("ul", { class: "liste-mots" }, signes.map((s) => h("li", {}, h("a", { href: "#/mot/" + s.id }, s.mot,
           etat.cartes[s.id]?.revisions ? h("span", { class: "pastille" }, "appris") : null))))) : null,
       signes.length ? h("button", { type: "button", class: "btn secondaire large", onclick: () => telechargerUnite(u) },
-        icone("telecharger", 20), " Garder cette unité hors ligne") : null),
+        icone("telecharger", 20), " Garder cette unité hors ligne") : null,
+      videosElix ? h("p", { class: "info centre" }, "Les vidéos Elix restent en ligne et ne sont pas téléchargées.") : null),
     barreOnglets("parcours")));
 }
 
@@ -349,7 +351,7 @@ function ecranDico() {
     const r = q ? tous.filter((s) => normaliser(s.mot).includes(q) || (s.alias || []).some((a) => normaliser(a).includes(q))) : tous;
     liste.replaceChildren(...r.slice(0, 300).map((s) => h("li", {}, h("a", { href: "#/mot/" + s.id },
       h("span", {}, s.mot, s.glose ? h("span", { class: "glose-liste" }, ` (${s.glose})`) : null),
-      h("span", { class: "nb" }, s.ressources.length > 1 ? `${s.ressources.length} vidéos` : "")))));
+      h("span", { class: "nb" }, ressourcesVideo(s).length > 1 ? `${ressourcesVideo(s).length} vidéos` : "")))));
     if (r.length > 300) liste.append(h("li", { class: "info" }, `${r.length - 300} autres résultats : précise ta recherche.`));
     if (!r.length) liste.append(h("li", { class: "info" }, "Aucun signe libre trouvé. ",
       lienExterne("https://dico.elix-lsf.fr/dictionnaire/" + encodeURIComponent(recherche), "Chercher sur le Dico Elix")));
@@ -367,9 +369,10 @@ function ecranMot(id) {
   if (!s) return aller("/dico");
   let index = 0;
   const zone = h("div");
-  const items = s.ressources.map((r, i) => h("li", {}, h("button", { type: "button", class: "ressource" + (i === index ? " actif" : ""), onclick: () => { index = i; dessiner(); } },
-    h("img", { src: r.vignette, alt: "", width: 64, height: 48, loading: "lazy" }),
-    h("span", {}, h("strong", {}, r.auteur), h("br"), `${r.source} · ${r.licence}`))));
+  const ressources = ressourcesVideo(s);
+  const items = ressources.map((r, i) => h("li", {}, h("button", { type: "button", class: "ressource" + (i === index ? " actif" : ""), onclick: () => { index = i; dessiner(); } },
+    r.vignette ? h("img", { src: r.vignette, alt: "", width: 64, height: 48, loading: "lazy" }) : null,
+    h("span", {}, h("strong", {}, r.auteur), h("br"), r.distante ? `${r.source} · lecture en ligne` : `${r.source} · ${r.licence}`))));
   function dessiner() {
     zone.replaceChildren(lecteur(s, { index, onIndexChange: (nouvelIndex) => {
       index = nouvelIndex;
@@ -384,7 +387,7 @@ function ecranMot(id) {
     h("header", { class: "entete-simple" }, h("a", { href: "#/dico", class: "btn-icone", "aria-label": "Retour au dictionnaire" }, icone("retour")),
       h("div", {}, h("h1", {}, s.mot), h("p", { class: "sous" }, [s.categorie, s.glose].filter(Boolean).join(" · ") || " "))),
     h("main", { class: "contenu" }, zone,
-      h("h2", { class: "titre-section" }, `${s.ressources.length} ressource${s.ressources.length > 1 ? "s" : ""} libre${s.ressources.length > 1 ? "s" : ""}`),
+      h("h2", { class: "titre-section" }, `${ressources.length} vidéo${ressources.length > 1 ? "s disponibles" : " disponible"}`),
       h("ul", { class: "liste-ressources" }, items),
       lienExterne(s.elix, h("span", { class: "carte lien-carte" }, h("div", {}, h("h2", {}, "Voir « ", s.mot, " » sur le Dico Elix"),
         h("p", {}, "Autres signes et définition en LSF, dans le navigateur")), icone("externe", 22))),
@@ -450,20 +453,23 @@ async function exporterProgression() {
 
 function ecranCredits() {
   const parSource = {};
+  let videosElixEnLigne = 0;
   for (const s of Object.values(etat.sens)) for (const r of s.ressources) {
     const k = `${r.source}|${r.licence}|${r.licenceUrl}`;
     (parSource[k] ||= { source: r.source, licence: r.licence, url: r.licenceUrl, n: 0 }).n++;
   }
+  for (const s of Object.values(etat.sens)) videosElixEnLigne += (s.videosEnLigne || []).length;
   const nonPubliees = etat.toutesUnites.filter((u) => !u.publiee);
   app.replaceChildren(h("div", { class: "ecran" },
     h("header", { class: "entete-simple" }, h("a", { href: "#/profil", class: "btn-icone", "aria-label": "Retour" }, icone("retour")), h("h1", {}, "Sources et licences")),
     h("main", { class: "contenu" },
       h("section", { class: "carte" }, h("h2", {}, "Vidéos"),
-        h("p", {}, "L'app n'utilise que des vidéos sous licence libre existantes. Chaque vidéo affiche son auteur et sa licence."),
+        h("p", {}, "Les vidéos libres affichent leur auteur et leur licence. Les vidéos Elix en ligne sont lues depuis les serveurs d'Elix."),
         h("ul", {}, Object.values(parSource).map((p) => h("li", {}, `${p.source} : ${p.n} vidéos, `, lienExterne(p.url, p.licence)))),
         h("p", { class: "info" }, "Les vidéos ont été converties en MP4 et allégées pour l'app. Les vidéos CC BY-SA restent sous la même licence.")),
       h("section", { class: "carte" }, h("h2", {}, "Dico Elix"),
-        h("p", {}, "Les liens « Voir sur le Dico Elix » ouvrent le site d'Elix (Signes de sens). Ses vidéos ne sont pas reprises dans l'app.")),
+        h("p", {}, `Les vidéos Elix${videosElixEnLigne ? ` (${videosElixEnLigne})` : ""} sont lues en continu depuis les serveurs d'Elix. Elles ne sont ni téléchargées ni mises à disposition hors ligne par l'app.`),
+        h("p", { class: "info" }, "Le lien sous chaque vidéo renvoie à sa page d'origine sur le Dico Elix.")),
       h("section", { class: "carte" }, h("h2", {}, "Grammaire"),
         h("p", {}, "Les fiches de grammaire sont rédigées par le projet. Elles attendent la relecture d'un enseignant de LSF sourd.")),
       h("section", { class: "carte" }, h("h2", {}, `Unités en attente (${nonPubliees.length})`),

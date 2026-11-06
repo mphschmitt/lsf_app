@@ -2,7 +2,7 @@
 
 Application gratuite, façon Duolingo, pour apprendre la langue des signes française (LSF). Elle s'installe sur iPhone, Android et ordinateur depuis le navigateur, sans App Store, et fonctionne hors ligne.
 
-L'app n'utilise que des ressources qui existent déjà sous licence libre. Pour chaque mot, elle montre toutes les vidéos libres disponibles et renvoie vers la page du mot sur le [Dico Elix](https://dico.elix-lsf.fr/).
+L'app utilise des vidéos sous licence libre et peut aussi lire les vidéos de signe Elix directement depuis leurs serveurs, sans les télécharger ni les stocker dans le dépôt. Les liens sont recherchés pour tout le vocabulaire du dictionnaire ; seuls les résultats correspondant exactement au mot sont retenus, et un mot sans vidéo Elix disponible garde ses autres ressources.
 
 ## Ce qu'il y a dedans
 
@@ -64,7 +64,9 @@ git clone --depth 1 https://github.com/parlr/lsf-data.git /tmp/lsf-data
 python3 pipeline/build.py --parlr /tmp/lsf-data            # ajouter --commons pour Wikimedia Commons
 ```
 
-Le pipeline collecte les vidéos, vérifie leur licence, regroupe les vidéos par sens, construit les liens Elix, convertit les vidéos en MP4 légers (lisibles sur iPhone), découpe les unités en leçons et écrit `site/content/contenu.json` et `pipeline/couverture.md`.
+Le pipeline collecte les vidéos, vérifie leur licence, regroupe les vidéos par sens, construit les liens Elix, convertit les vidéos libres en MP4 légers (lisibles sur iPhone), découpe les unités en leçons et écrit `site/content/contenu.json`, `site/content/videos-en-ligne.json` et `pipeline/couverture.md`. Les vidéos listées dans le second fichier restent hébergées par Elix et ne sont pas téléchargées.
+
+Pour actualiser les vidéos Elix en ligne pour chaque mot du dictionnaire, exécuter `python3 pipeline/elix_en_ligne.py` avec une connexion Internet. Le script met à jour le manifeste source et celui du site sans télécharger les vidéos.
 
 ### Modifier le programme
 

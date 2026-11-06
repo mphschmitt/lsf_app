@@ -1,8 +1,12 @@
 import { h, icone, lienExterne } from "./ui.js";
 
+export function ressourcesVideo(sens) {
+  return [...sens.ressources, ...(sens.videosEnLigne || [])];
+}
+
 // Lecteur d'un signe : boucle, ralenti, revoir, navigation entre vidéos, crédit.
 export function lecteur(sens, { controles = true, credit = true, index = null, onIndexChange = () => {} } = {}) {
-  const res = sens.ressources;
+  const res = ressourcesVideo(sens);
   let i = index ?? Math.floor(Math.random() * res.length);
   let lent = false;
 
@@ -17,14 +21,15 @@ export function lecteur(sens, { controles = true, credit = true, index = null, o
 
   function charger() {
     const r = res[i];
-    video.poster = r.vignette;
+    video.poster = r.vignette || "";
     video.src = r.video;
     video.playbackRate = lent ? 0.5 : 1;
     const p = video.play();
     if (p && p.catch) p.catch(() => {});
     ligneCredit.replaceChildren(
       res.length > 1 ? `Vidéo ${i + 1} sur ${res.length} · ` : "",
-      lienExterne(r.origine, r.auteur), ` · ${r.licence}`,
+      lienExterne(r.origine, r.auteur),
+      r.distante ? " · lecture en ligne sur Elix" : ` · ${r.licence}`,
     );
   }
   function changer(delta) {
@@ -88,8 +93,9 @@ export function lecteur(sens, { controles = true, credit = true, index = null, o
 
 // Petite vidéo muette pour les choix (QCM mot → vidéo, paires).
 export function miniVideo(sens) {
-  const r = sens.ressources[Math.floor(Math.random() * sens.ressources.length)];
-  const v = h("video", { class: "mini-video", muted: true, playsInline: true, loop: true, autoplay: true, preload: "auto", poster: r.vignette, src: r.video });
+  const ressources = ressourcesVideo(sens);
+  const r = ressources[Math.floor(Math.random() * ressources.length)];
+  const v = h("video", { class: "mini-video", muted: true, playsInline: true, loop: true, autoplay: true, preload: "auto", poster: r.vignette || "", src: r.video });
   v.setAttribute("muted", "");
   v.setAttribute("playsinline", "");
   return v;

@@ -4,6 +4,7 @@ import unittest
 
 sys.path.insert(0, os.path.dirname(__file__))
 from build import cle, normaliser, decouper_lecons  # noqa: E402
+from elix_en_ligne import videos_de_page  # noqa: E402
 from sources import lemme_depuis_titre, licence_commons  # noqa: E402
 
 
@@ -42,6 +43,23 @@ class TestCommons(unittest.TestCase):
         self.assertEqual(licence_commons({"LicenseShortName": {"value": "CC0"}})[0], "CC0")
         self.assertIsNone(licence_commons({"LicenseShortName": {"value": "CC BY-NC 4.0"}}))
         self.assertIsNone(licence_commons({}))
+
+
+class TestElixEnLigne(unittest.TestCase):
+    def test_video_de_signe_exacte_uniquement(self):
+        html = '''<script>window.__PRELOADED_STATE__ = {"search":{"results":[
+          {"name":"bonjour","meanings":[{"wordSigns":[
+            {"uri":"https://elix-lsf.s3.rbx.io.cloud.ovh.net/spip_videos/bonjour.mp4","author":"Signes de sens","image":"https://elix-lsf.s3.rbx.io.cloud.ovh.net/spip_images/bonjour.jpg"}
+          ],"definitionSigns":[{"uri":"https://elix-lsf.s3.rbx.io.cloud.ovh.net/spip_videos/definition.mp4"}]}]},
+          {"name":"bonsoir","meanings":[{"wordSigns":[
+            {"uri":"https://elix-lsf.s3.rbx.io.cloud.ovh.net/spip_videos/bonsoir.mp4"}
+          ]}]}
+        ]}};</script>'''
+        videos = videos_de_page(html, "Bonjour", "https://dico.elix-lsf.fr/dictionnaire/bonjour")
+        self.assertEqual(len(videos), 1)
+        self.assertTrue(videos[0]["video"].endswith("/bonjour.mp4"))
+        self.assertEqual(videos[0]["auteur"], "Signes de sens")
+        self.assertTrue(videos[0]["distante"])
 
 
 if __name__ == "__main__":

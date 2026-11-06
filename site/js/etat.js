@@ -17,9 +17,18 @@ export const etat = {
 };
 
 export async function charger() {
-  const r = await fetch("content/contenu.json", { cache: "no-cache" });
+  const [r, rv] = await Promise.all([
+    fetch("content/contenu.json", { cache: "no-cache" }),
+    fetch("content/videos-en-ligne.json", { cache: "no-cache" }),
+  ]);
   if (!r.ok) throw new Error("Contenu introuvable");
-  const c = await r.json();
+  if (!rv.ok) throw new Error("Ressources vidéo en ligne introuvables");
+  const [c, videosEnLigne] = await Promise.all([r.json(), rv.json()]);
+  for (const [mot, videos] of Object.entries(videosEnLigne)) {
+    for (const sens of Object.values(c.sens)) {
+      if (sens.mot.toLocaleLowerCase("fr") === mot.toLocaleLowerCase("fr")) sens.videosEnLigne = videos;
+    }
+  }
   etat.contenu = c;
   etat.sens = c.sens;
   etat.toutesUnites = c.unites;

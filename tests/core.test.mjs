@@ -88,6 +88,7 @@ test("Note d'un sens selon les résultats", () => {
 
 test("Contenu publié : unités, leçons et ressources cohérentes", () => {
   const c = JSON.parse(fs.readFileSync(new URL("../site/content/contenu.json", import.meta.url)));
+  const videosEnLigne = JSON.parse(fs.readFileSync(new URL("../site/content/videos-en-ligne.json", import.meta.url)));
   const publiees = c.unites.filter((u) => u.publiee);
   assert.ok(publiees.length > 0);
   for (const u of publiees) {
@@ -110,6 +111,24 @@ test("Contenu publié : unités, leçons et ressources cohérentes", () => {
       assert.ok(r.licence && r.licenceUrl && r.auteur && r.origine, `attribution incomplète pour ${s.mot}`);
       assert.ok(fs.existsSync(new URL("../site/" + r.video, import.meta.url)), `vidéo absente : ${r.video}`);
       assert.ok(fs.existsSync(new URL("../site/" + r.vignette, import.meta.url)), `vignette absente : ${r.vignette}`);
+    }
+  }
+  for (const [mot, videos] of Object.entries(videosEnLigne)) {
+    assert.ok(Object.values(c.sens).some((s) => s.mot.toLocaleLowerCase("fr") === mot.toLocaleLowerCase("fr")),
+      `mot Elix absent du dictionnaire : ${mot}`);
+    for (const r of videos) {
+      assert.ok(r.distante && r.video.startsWith("https://elix-lsf.s3.rbx.io.cloud.ovh.net/"),
+        `vidéo Elix en ligne incorrecte pour ${mot}`);
+      assert.ok(r.auteur && r.origine, `attribution manquante pour la vidéo Elix de ${mot}`);
+    }
+  }
+  for (const mot of ["de rien", "au revoir"]) {
+    const s = Object.values(c.sens).find((x) => x.mot === mot);
+    const videos = videosEnLigne[mot];
+    assert.ok(s && videos?.some((r) => r.source === "Elix (Signes de sens)"), `vidéo Elix en ligne absente pour ${mot}`);
+    for (const r of videos) {
+      assert.ok(r.distante && r.video.startsWith("https://"), `vidéo en ligne incorrecte pour ${mot}`);
+      assert.ok(r.auteur && r.origine, `attribution manquante pour la vidéo en ligne de ${mot}`);
     }
   }
 });

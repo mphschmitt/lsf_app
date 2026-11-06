@@ -1,7 +1,8 @@
 // Service worker : l'app fonctionne hors ligne.
 // - coquille de l'app : mise en cache à l'installation
 // - contenu.json : réseau d'abord, cache en secours
-// - vidéos et vignettes : cache d'abord (elles ne changent pas)
+// - vidéos et vignettes locales : cache d'abord (elles ne changent pas)
+// - vidéos externes Elix : lues depuis leur serveur, jamais ajoutées au cache de l'app
 const VERSION = "local";
 const COQUILLE = `coquille-${VERSION}`;
 const VIDEOS = "lsf-videos";
@@ -12,7 +13,7 @@ const FICHIERS = [
   "js/exos.js", "js/session.js", "js/player.js",
   "fonts/atkinson-400.woff", "fonts/atkinson-700.woff", "fonts/bricolage-var.woff",
   "icons/icon-192.png", "icons/apple-touch-icon.png",
-  "content/contenu.json",
+  "content/contenu.json", "content/videos-en-ligne.json",
 ];
 
 self.addEventListener("install", (e) => {

@@ -216,6 +216,7 @@ def main() -> None:
     rid_de = {id(r): (rid, f) for r, rid, f in gardees}
 
     sens = construire_sens([r for r, _, _ in gardees])
+    videos_en_ligne = json.load(open(os.path.join(ICI, "elix-en-ligne.json"), encoding="utf-8"))
     sens_json = OrderedDict()
     for sid, s in sens.items():
         res_json = []
@@ -228,6 +229,9 @@ def main() -> None:
             })
         sens_json[sid] = {k: v for k, v in s.items() if k not in ("ressources", "cle")}
         sens_json[sid]["ressources"] = res_json
+
+    with open(os.path.join(sortie, "videos-en-ligne.json"), "w", encoding="utf-8") as f:
+        json.dump(videos_en_ligne, f, ensure_ascii=False, separators=(",", ":"))
 
     plan = json.load(open(os.path.join(ICI, "units.json"), encoding="utf-8"))
     grammaire = json.load(open(os.path.join(ICI, "grammar.json"), encoding="utf-8"))
