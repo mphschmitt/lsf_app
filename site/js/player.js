@@ -1,13 +1,25 @@
 import { h, icone, lienExterne } from "./ui.js";
 
-export function ressourcesVideo(sens) {
-  return [...sens.ressources, ...(sens.videosEnLigne || [])];
+export function ressourcesVideo(sens, horsLigne = typeof navigator !== "undefined" && !navigator.onLine) {
+  const ressources = [...sens.ressources, ...(sens.videosEnLigne || [])];
+  if (!horsLigne) return ressources;
+  const locales = ressources.filter((r) => !r.distante);
+  return locales.length ? [...locales, ...ressources.filter((r) => r.distante)] : ressources;
+}
+
+export function ressourceVideoAttitree(sens) {
+  const ressources = [...sens.ressources, ...(sens.videosEnLigne || [])];
+  return ressources.find((r) => !r.distante) || ressources[0];
 }
 
 // Lecteur d'un signe : boucle, ralenti, revoir, navigation entre vidéos, crédit.
-export function lecteur(sens, { controles = true, credit = true, index = null, onIndexChange = () => {} } = {}) {
-  const res = ressourcesVideo(sens);
-  let i = index ?? Math.floor(Math.random() * res.length);
+export function lecteur(sens, { controles = true, credit = true, index = null, onIndexChange = () => {}, stable = false } = {}) {
+  const toutesLesRessources = ressourcesVideo(sens);
+  const res = stable ? [ressourceVideoAttitree(sens)] : toutesLesRessources;
+  const choixInitiaux = !navigator.onLine && res.some((r) => !r.distante)
+    ? res.map((r, n) => !r.distante ? n : -1).filter((n) => n >= 0)
+    : res.map((_, n) => n);
+  let i = stable ? 0 : (index ?? choixInitiaux[Math.floor(Math.random() * choixInitiaux.length)]);
   let lent = false;
 
   const video = h("video", {
@@ -17,10 +29,33 @@ export function lecteur(sens, { controles = true, credit = true, index = null, o
   video.setAttribute("muted", "");
   video.setAttribute("playsinline", "");
   const cadre = h("div", { class: "cadre-video" }, video);
+  const erreurLecture = h("p", { class: "erreur-video", role: "status", hidden: true });
   const ligneCredit = h("p", { class: "credit" });
 
+  function masquerErreur() {
+    erreurLecture.hidden = true;
+    erreurLecture.replaceChildren();
+  }
+  function afficherErreur() {
+    const r = res[i];
+    erreurLecture.replaceChildren(
+      r.distante
+        ? "Impossible de charger cette vidéo Elix. Vérifie ta connexion ou ouvre-la sur Elix. "
+        : "Impossible de charger cette vidéo. Réessaie ou choisis une autre ressource. ",
+      r.distante ? lienExterne(r.origine, "Ouvrir Elix") : null,
+      h("button", { type: "button", class: "btn-mini", onclick: charger }, "Réessayer"),
+      r.distante && res.some((ressource) => !ressource.distante)
+        ? h("button", { type: "button", class: "btn-mini", onclick: () => selectionner(res.findIndex((ressource) => !ressource.distante)) },
+          "Afficher une vidéo locale")
+        : null,
+    );
+    erreurLecture.hidden = false;
+  }
   function charger() {
     const r = res[i];
+    masquerErreur();
+    video.pause();
+    video.dataset.url = r.video;
     video.poster = r.vignette || "";
     video.src = r.video;
     video.playbackRate = lent ? 0.5 : 1;
@@ -32,11 +67,18 @@ export function lecteur(sens, { controles = true, credit = true, index = null, o
       r.distante ? " · lecture en ligne sur Elix" : ` · ${r.licence}`,
     );
   }
-  function changer(delta) {
-    i = (i + delta + res.length) % res.length;
+  function selectionner(nouvelIndex) {
+    i = nouvelIndex;
     charger();
     onIndexChange(i);
   }
+  function changer(delta) {
+    selectionner((i + delta + res.length) % res.length);
+  }
+  video.addEventListener("error", () => {
+    if (video.dataset.url === res[i].video) afficherErreur();
+  });
+  video.addEventListener("loadeddata", masquerErreur);
   video.addEventListener("loadedmetadata", () => { video.playbackRate = lent ? 0.5 : 1; });
 
   if (res.length > 1) {
@@ -88,15 +130,38 @@ export function lecteur(sens, { controles = true, credit = true, index = null, o
   ) : null;
 
   charger();
-  return h("div", { class: "lecteur" }, cadre, barre, credit ? ligneCredit : null);
+  return h("div", { class: "lecteur" }, cadre, erreurLecture, barre, credit ? ligneCredit : null);
 }
 
 // Petite vidéo muette pour les choix (QCM mot → vidéo, paires).
-export function miniVideo(sens) {
-  const ressources = ressourcesVideo(sens);
-  const r = ressources[Math.floor(Math.random() * ressources.length)];
-  const v = h("video", { class: "mini-video", muted: true, playsInline: true, loop: true, autoplay: true, preload: "auto", poster: r.vignette || "", src: r.video });
+export function miniVideo(sens, { stable = false } = {}) {
+  const toutesLesRessources = ressourcesVideo(sens);
+  const ressources = stable ? [ressourceVideoAttitree(sens)] : toutesLesRessources;
+  const locales = ressources.filter((r) => !r.distante);
+  const choix = !navigator.onLine && locales.length ? locales : ressources;
+  let ressource = choix[Math.floor(Math.random() * choix.length)];
+  let repliEffectue = false;
+  const v = h("video", { class: "mini-video", muted: true, playsInline: true, loop: true, autoplay: true, preload: "auto", poster: ressource.vignette || "", src: ressource.video });
   v.setAttribute("muted", "");
   v.setAttribute("playsinline", "");
-  return v;
+  const erreur = h("span", { class: "erreur-mini-video", role: "status", hidden: true });
+  v.addEventListener("error", () => {
+    if (ressource.distante && locales.length && !repliEffectue) {
+      repliEffectue = true;
+      ressource = locales[0];
+      erreur.textContent = "Vidéo Elix indisponible ; une vidéo locale est affichée.";
+      erreur.hidden = false;
+      v.poster = ressource.vignette || "";
+      v.src = ressource.video;
+      v.load();
+      const lecture = v.play();
+      if (lecture && lecture.catch) lecture.catch(() => {});
+      return;
+    }
+    erreur.textContent = ressource.distante
+      ? "Vidéo Elix indisponible. Une connexion Internet est nécessaire."
+      : "Vidéo indisponible.";
+    erreur.hidden = false;
+  });
+  return h("span", { class: "conteneur-video-mini" }, v, erreur);
 }

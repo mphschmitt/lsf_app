@@ -35,7 +35,7 @@ function choixMots(etape, api, consigne, haut) {
 }
 
 const rendus = {
-  decouverte(etape, api) {
+  decouverte(etape, api, ctx) {
     const s = S(etape.sens);
     api.pret(true, "Continuer");
     return {
@@ -43,17 +43,17 @@ const rendus = {
         h("p", { class: "surtitre" }, "Nouveau signe"),
         h("h1", { class: "mot-titre" }, s.mot),
         s.glose ? h("p", { class: "glose" }, s.glose) : null,
-        lecteur(s),
+        lecteur(s, { stable: ctx.videoFixe }),
         h("p", { class: "lien-elix" }, lienExterne(s.elix, icone("externe", 16), " Voir « ", s.mot, " » sur le Dico Elix"))),
       verifier: () => ({ ok: null, sens: {} }),
     };
   },
 
-  videoMot(etape, api) {
-    return choixMots(etape, api, "Quel mot est signé ?", lecteur(S(etape.sens)));
+  videoMot(etape, api, ctx) {
+    return choixMots(etape, api, "Quel mot est signé ?", lecteur(S(etape.sens), { stable: ctx.videoFixe }));
   },
 
-  motVideo(etape, api) {
+  motVideo(etape, api, ctx) {
     let choisi = null;
     const cartes = etape.options.map((id) => {
       const b = h("button", { type: "button", class: "choix-video", "aria-pressed": "false", "aria-label": "Choisir cette vidéo",
@@ -64,7 +64,7 @@ const rendus = {
           b.classList.add("selectionne");
           b.setAttribute("aria-pressed", "true");
           api.pret(true);
-        } }, miniVideo(S(id)));
+        } }, miniVideo(S(id), { stable: ctx.videoFixe }));
       b.dataset.id = id;
       return b;
     });
@@ -82,7 +82,7 @@ const rendus = {
     };
   },
 
-  vraiFaux(etape, api) {
+  vraiFaux(etape, api, ctx) {
     let choix = null;
     const b = (val, txt) => {
       const x = h("button", { type: "button", class: "choix", "aria-pressed": "false",
@@ -99,7 +99,7 @@ const rendus = {
     const bv = b(true, "Oui"), bf = b(false, "Non");
     return {
       el: h("div", { class: "etape" }, h("h1", { class: "consigne" }, "Ce signe veut-il dire « ", S(etape.montre).mot, " » ?"),
-        lecteur(S(etape.sens)), h("div", { class: "grille-choix" }, bv, bf)),
+        lecteur(S(etape.sens), { stable: ctx.videoFixe }), h("div", { class: "grille-choix" }, bv, bf)),
       verifier() {
         const ok = choix === etape.correct;
         (etape.correct ? bv : bf).classList.add("bon");
@@ -109,13 +109,13 @@ const rendus = {
     };
   },
 
-  saisie(etape, api) {
+  saisie(etape, api, ctx) {
     const champ = h("input", { id: "saisie", type: "text", class: "champ", autocomplete: "off", autocapitalize: "none", spellcheck: false,
       oninput: () => api.pret(champ.value.trim().length > 0),
       onkeydown: (e) => { if (e.key === "Enter" && champ.value.trim()) api.valider(); } });
     setTimeout(() => champ.focus({ preventScroll: true }), 50);
     return {
-      el: h("div", { class: "etape" }, h("h1", { class: "consigne" }, "Écris le mot signé"), lecteur(S(etape.sens)),
+      el: h("div", { class: "etape" }, h("h1", { class: "consigne" }, "Écris le mot signé"), lecteur(S(etape.sens), { stable: ctx.videoFixe }),
         h("label", { for: "saisie", class: "etiquette" }, "Ta réponse"), champ),
       verifier() {
         const ok = estBonneSaisie(S(etape.sens), champ.value);
@@ -126,7 +126,7 @@ const rendus = {
     };
   },
 
-  paires(etape, api) {
+  paires(etape, api, ctx) {
     const ids = etape.sens;
     const resultats = Object.fromEntries(ids.map((id) => [id, "ok"]));
     let selVideo = null, selMot = null, trouvees = 0;
@@ -149,7 +149,7 @@ const rendus = {
     const videos = melanger(ids).map((id) => {
       const b = h("button", { type: "button", class: "choix-video petit", "aria-label": "Vidéo",
         onclick: () => { for (const x of videos) x.classList.remove("selectionne"); selVideo = b; b.classList.add("selectionne"); essayer(); } },
-        miniVideo(S(id)));
+        miniVideo(S(id), { stable: ctx.videoFixe }));
       b.dataset.id = id;
       return b;
     });

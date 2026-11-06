@@ -5,7 +5,7 @@ import { noteDuSens } from "./exercises.js";
 import { appliquerNotes, gagnerXp, marquerLecon, etat } from "./etat.js";
 import { retourPositif } from "./feedback.js";
 
-// options : { etapes, suivante?, duree?, lecon?, retour, titreFin, ctx, record? }
+// options : { etapes, suivante?, duree?, lecon?, retour, titreFin, ctx, videoFixe?, record? }
 export function session(racine, options) {
   const etapes = [...(options.etapes || [])];
   const resultats = {}; // id du sens -> ["ok" | "rate" | "hesite"]
@@ -66,7 +66,10 @@ export function session(racine, options) {
       surQuitter(f) { quitter = f; },
       terminer(r) { verrou = true; noter(r); retour(r); },
     };
-    const rendu = rendreEtape(etape, api, options.ctx || {});
+    const rendu = rendreEtape(etape, api, {
+      ...(options.ctx || {}),
+      videoFixe: options.videoFixe ?? options.ctx?.videoFixe ?? false,
+    });
     corps.replaceChildren(rendu.el);
     corps.scrollTop = 0;
     pied.className = "pied-session";

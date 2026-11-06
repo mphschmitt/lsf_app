@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { reviser, nouvelleCarte, Note, intervalle, retenue, estDue } from "../site/js/fsrs.js";
 import { construireSerie, construireLecon, distracteurs, estBonneSaisie, noteDuSens, normaliser, construireGrammaire } from "../site/js/exercises.js";
-import { ressourcesVideo } from "../site/js/player.js";
+import { ressourcesVideo, ressourceVideoAttitree } from "../site/js/player.js";
 import { retourPositif } from "../site/js/feedback.js";
 import fs from "node:fs";
 
@@ -19,6 +19,13 @@ test("Ressources vidéo : les ressources locales passent avant les distantes hor
   assert.deepEqual(ressourcesVideo(mot, true), [local, distante]);
   assert.deepEqual(ressourcesVideo(mot, false), [distante, local]);
   assert.deepEqual(ressourcesVideo({ ressources: [distante], videosEnLigne: [] }, true), [distante]);
+});
+
+test("Vidéo attitrée : choisit toujours la première ressource locale", () => {
+  const locale = { id: "locale" };
+  const distante = { id: "elix", distante: true };
+  assert.equal(ressourceVideoAttitree({ ressources: [distante, locale], videosEnLigne: [] }), locale);
+  assert.equal(ressourceVideoAttitree({ ressources: [], videosEnLigne: [distante] }), distante);
 });
 
 test("FSRS : R(S, S) vaut 0,9 et l'intervalle vaut S", () => {

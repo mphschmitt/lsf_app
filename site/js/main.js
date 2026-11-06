@@ -209,11 +209,11 @@ function ecranLecon(id) {
   if (lecon.type === "revision") {
     const etapes = construireSerie({ ids: lecon.sens, proches: lecon.sens, reste: connus,
       types: ["videoMot", "motVideo", "vraiFaux", "saisie", "paires"], nombre: 15, sensParId });
-    return session(app, { etapes, lecon: id, retour: "/", titreFin: "Unité révisée" });
+    return session(app, { etapes, lecon: id, retour: "/", titreFin: "Unité révisée", videoFixe: true });
   }
   const nouveaux = lecon.sens.filter((s) => !etat.cartes[s]?.revisions);
   const etapes = construireLecon({ ids: lecon.sens, nouveaux, reste: [...unite.sens, ...connus], sensParId });
-  session(app, { etapes, lecon: id, retour: "/", titreFin: "Leçon terminée" });
+  session(app, { etapes, lecon: id, retour: "/", titreFin: "Leçon terminée", videoFixe: true });
 }
 
 const MOTS_EPELES = ["LEA", "PAUL", "EMMA", "HUGO", "CHLOE", "LUCAS", "INES", "JULES", "SARAH", "TOM", "NOAH", "ZOE",
