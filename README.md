@@ -28,7 +28,7 @@ Ne sont pas publiées, faute de vidéos libres : la dactylologie, les chiffres, 
 3. Le workflow « Publier sur GitHub Pages » publie le dossier `site/` à chaque push sur `master`. Tu peux aussi le lancer manuellement depuis **Actions**.
 4. Une fois le premier déploiement terminé, l'adresse s'affiche dans **Settings › Pages** et dans le résumé du workflow, sous la forme `https://mphschmitt.github.io/lsf_app/`.
 
-Le site est statique : aucune étape de build ni dépendance supplémentaire n'est nécessaire.
+Le site est statique : aucune étape de build ni dépendance supplémentaire n'est nécessaire. L'application vérifie les mises à jour en arrière-plan et recharge la page dès qu'une nouvelle version est prête. Une mise à jour peut aussi être prise en compte à la prochaine ouverture de l'app.
 
 ## Installer l'app sur iPhone
 

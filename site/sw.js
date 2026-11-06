@@ -2,7 +2,7 @@
 // - coquille de l'app : mise en cache à l'installation
 // - contenu.json : réseau d'abord, cache en secours
 // - vidéos et vignettes : cache d'abord (elles ne changent pas)
-const VERSION = "v1";
+const VERSION = "local";
 const COQUILLE = `coquille-${VERSION}`;
 const VIDEOS = "lsf-videos";
 
@@ -20,9 +20,19 @@ self.addEventListener("install", (e) => {
 });
 
 self.addEventListener("activate", (e) => {
-  e.waitUntil(caches.keys()
-    .then((cles) => Promise.all(cles.filter((k) => k.startsWith("coquille-") && k !== COQUILLE).map((k) => caches.delete(k))))
-    .then(() => self.clients.claim()));
+  e.waitUntil(caches.keys().then(async (cles) => {
+    const anciennes = cles.filter((k) => k.startsWith("coquille-") && k !== COQUILLE);
+    await Promise.all(anciennes.map((k) => caches.delete(k)));
+    await self.clients.claim();
+    if (anciennes.includes("coquille-v1")) {
+      const pages = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+      await Promise.all(pages
+        .filter((client) => client.url.startsWith(self.registration.scope))
+        .map((client) => client.navigate(client.url).catch((err) => {
+          console.warn("Rechargement après mise à jour impossible :", err);
+        })));
+    }
+  }));
 });
 
 self.addEventListener("fetch", (e) => {

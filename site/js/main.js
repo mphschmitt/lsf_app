@@ -479,7 +479,28 @@ async function demarrer() {
   window.addEventListener("hashchange", router);
   router();
   if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
-    navigator.serviceWorker.register("sw.js").catch(() => {});
+    try {
+      if (navigator.serviceWorker.controller) {
+        let rechargementEnCours = false;
+        navigator.serviceWorker.addEventListener("controllerchange", () => {
+          if (rechargementEnCours) return;
+          rechargementEnCours = true;
+          location.reload();
+        });
+      }
+      const registration = await navigator.serviceWorker.register("sw.js", { updateViaCache: "none" });
+      const verifierMiseAJour = () => registration.update().catch((e) => {
+        console.warn("Vérification de mise à jour impossible :", e);
+      });
+      verifierMiseAJour();
+      window.setInterval(verifierMiseAJour, 5 * 60 * 1000);
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") verifierMiseAJour();
+      });
+      window.addEventListener("online", verifierMiseAJour);
+    } catch (e) {
+      console.warn("Enregistrement du service worker impossible :", e);
+    }
   }
 }
 
