@@ -12,14 +12,21 @@ export function ressourceVideoAttitree(sens) {
   return ressources.find((r) => !r.distante) || ressources[0];
 }
 
+export function initialiserRessourcesLecteur(sens, { stable = false, horsLigne = typeof navigator !== "undefined" && !navigator.onLine } = {}) {
+  const ressources = ressourcesVideo(sens, horsLigne);
+  const choixInitiaux = horsLigne && ressources.some((r) => !r.distante)
+    ? ressources.map((r, n) => !r.distante ? n : -1).filter((n) => n >= 0)
+    : ressources.map((_, n) => n);
+  const indexInitial = stable
+    ? ressources.indexOf(ressourceVideoAttitree(sens))
+    : choixInitiaux[Math.floor(Math.random() * choixInitiaux.length)];
+  return { ressources, indexInitial };
+}
+
 // Lecteur d'un signe : boucle, ralenti, revoir, navigation entre vidéos, crédit.
 export function lecteur(sens, { controles = true, credit = true, index = null, onIndexChange = () => {}, stable = false } = {}) {
-  const toutesLesRessources = ressourcesVideo(sens);
-  const res = stable ? [ressourceVideoAttitree(sens)] : toutesLesRessources;
-  const choixInitiaux = !navigator.onLine && res.some((r) => !r.distante)
-    ? res.map((r, n) => !r.distante ? n : -1).filter((n) => n >= 0)
-    : res.map((_, n) => n);
-  let i = stable ? 0 : (index ?? choixInitiaux[Math.floor(Math.random() * choixInitiaux.length)]);
+  const { ressources: res, indexInitial } = initialiserRessourcesLecteur(sens, { stable });
+  let i = stable ? indexInitial : (index ?? indexInitial);
   let lent = false;
 
   const video = h("video", {

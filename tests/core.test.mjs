@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { reviser, nouvelleCarte, Note, intervalle, retenue, estDue, estExcluDesRevisions, selectionnerRevisions } from "../site/js/fsrs.js";
 import { construireSerie, construireLecon, distracteurs, estBonneSaisie, noteDuSens, normaliser, construireGrammaire } from "../site/js/exercises.js";
-import { ressourcesVideo, ressourceVideoAttitree } from "../site/js/player.js";
+import { ressourcesVideo, ressourceVideoAttitree, initialiserRessourcesLecteur } from "../site/js/player.js";
 import { retourPositif } from "../site/js/feedback.js";
 import fs from "node:fs";
 
@@ -26,6 +26,15 @@ test("Vidéo attitrée : choisit toujours la première ressource locale", () => 
   const distante = { id: "elix", distante: true };
   assert.equal(ressourceVideoAttitree({ ressources: [distante, locale], videosEnLigne: [] }), locale);
   assert.equal(ressourceVideoAttitree({ ressources: [], videosEnLigne: [distante] }), distante);
+});
+
+test("Lecteur : garde toutes les vidéos, même quand la vidéo initiale est stable", () => {
+  const locale = { id: "locale" };
+  const elix = [{ id: "elix-1", distante: true }, { id: "elix-2", distante: true }];
+  const mot = { ressources: [locale], videosEnLigne: elix };
+  const { ressources, indexInitial } = initialiserRessourcesLecteur(mot, { stable: true, horsLigne: false });
+  assert.deepEqual(ressources, [locale, ...elix]);
+  assert.equal(indexInitial, 0);
 });
 
 test("FSRS : R(S, S) vaut 0,9 et l'intervalle vaut S", () => {
